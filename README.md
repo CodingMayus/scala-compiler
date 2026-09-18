@@ -1,0 +1,2 @@
+# CS241E - Foundations of Sequential Programs
+The goal of this repository is to create a working compiler in scala.  Once this is done, and works fully well, I plan to deploy it as a working tool for future students to use in the future. If needed this will be takened down.
