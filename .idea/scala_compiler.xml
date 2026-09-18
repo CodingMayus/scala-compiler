@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <option name="separateProdTestSources" value="true" />
+    <profile name="sbt 1" modules="cs241e,cs241e.main,cs241e.test,cs241e_1261,cs241e_1261.main,cs241e_1261.test" />
+  </component>
+</project>

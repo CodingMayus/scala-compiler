@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="cs241e:main [file:///C:/Users/matth/Downloads/cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca/cs241e/]" external.linked.project.path="C:\Users\matth\Downloads\cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca\cs241e" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="SBT" external.system.module.type="sbtSourceSet" type="JAVA_MODULE" version="4">
+  <component name="DisplayModuleName">
+    <option name="name" value="cs241e.main" />
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_26">
+    <output url="file://$MODULE_DIR$/../../../target/scala-3.3.6/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../src">
+      <sourceFolder url="file://$MODULE_DIR$/../../../src" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../src-3" />
+    <content url="file://$MODULE_DIR$/../../../target/scala-3.3.6/resource_managed/main" />
+    <content url="file://$MODULE_DIR$/../../../target/scala-3.3.6/src_managed/main" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="sbt: scala-sdk-3.3.6" level="project" />
+    <orderEntry type="module-library">
+      <library name="sbt: unmanaged-jars">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../lib/cs241e-library-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../lib/cs241e-library.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="sbt: org.scala-lang:scala3-library_3:3.3.6:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:pprint_3:0.9.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.13.16:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:fansi_3:0.5.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:sourcecode_3:0.4.3-M5:jar" level="project" />
+  </component>
+</module>

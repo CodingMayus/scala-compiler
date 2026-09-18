@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="cs241e:test [file:///C:/Users/matth/Downloads/cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca/cs241e/]" external.linked.project.path="C:\Users\matth\Downloads\cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca\cs241e" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="SBT" external.system.module.type="sbtSourceSet" type="JAVA_MODULE" version="4">
+  <component name="DisplayModuleName">
+    <option name="name" value="cs241e.test" />
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_26">
+    <output-test url="file://$MODULE_DIR$/../../../target/scala-3.3.6/test-classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../src/test" />
+    <content url="file://$MODULE_DIR$/../../../target/scala-3.3.6/resource_managed/test" />
+    <content url="file://$MODULE_DIR$/../../../target/scala-3.3.6/src_managed/test" />
+    <content url="file://$MODULE_DIR$/../../../test/src">
+      <sourceFolder url="file://$MODULE_DIR$/../../../test/src" isTestSource="true" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../test/src-3" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="sbt: scala-sdk-3.3.6" level="project" />
+    <orderEntry type="module" module-name="cs241e.main" />
+    <orderEntry type="module-library">
+      <library name="sbt: unmanaged-jars">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../lib/cs241e-library-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../lib/cs241e-library.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="sbt: org.scala-lang:scala3-library_3:3.3.6:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:pprint_3:0.9.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.13.16:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-core_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-featurespec_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-flatspec_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-freespec_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-funsuite_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-funspec_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-propspec_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-refspec_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-wordspec_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-diagrams_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-matchers-core_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-shouldmatchers_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-mustmatchers_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:fansi_3:0.5.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:sourcecode_3:0.4.3-M5:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalactic:scalactic_3:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalatest:scalatest-compatible:3.2.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang.modules:scala-xml_3:2.1.0:jar" level="project" />
+  </component>
+  <component name="TestModuleProperties" production-module="cs241e.main" />
+</module>
