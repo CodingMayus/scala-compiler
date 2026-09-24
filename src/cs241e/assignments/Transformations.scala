@@ -73,19 +73,47 @@ object Transformations {
     def setLabels(): Unit = {
       var address = 0
       code.foreach {
-        case Define(label) => ???
-        case _ => ???
+        case Define(label) =>{
+          // determine if the label already exists in the symbol table.  If so, error, if not add to the mutable
+          // map.
+            if(symbolTable.contains(label)){
+              sys.error(s"Error: Multiple definitions of label: ${label}.")
+            }else {
+              symbolTable += (label -> address);
+            }
+        }
+        case _ => address=address+4;
       }
     }
 
     /* Second pass: replace each `Code` with an equivalent sequence of `Word`s. */
     def translate: Seq[Word] = {
       var location = 0
-      code.flatMap {
-        case Define(label) => ???
-        case CodeWord(word) => ???
-        case Use(label) => ???
-        case BeqBne(bits, label) => ???
+        code.flatMap {
+        case Define(label) => {
+          location += 4;
+          return Seq()
+        };
+        case CodeWord(word) => {
+          location += 4;
+          return Seq(word)
+        };
+        case Use(label) => {
+          location += 4;
+          val encodedAddress= Word(encodeUnsigned(symbolTable(label)));
+          return Seq(encodedAddress);
+        };
+        case BeqBne(bits, label) => {
+          //calculate the offset straight up.
+          //make sure the offset can be represented as an immediate thingie.
+          val labelMemoryLocation = symbolTable(label)
+          val numberOffset= labelMemoryLocation-location;
+          if(numberOffset.abs> 65535){
+              sys.error("Error: The offset is too big.");
+          }
+          location += 4;
+          return Word(Bits(bits+++encodeSigned(numberOffset,16))) ;
+        };
         case other => impossible(s"Encountered unsupported code $other in eliminateLabels.")
       }
     }
@@ -102,7 +130,28 @@ object Transformations {
     * Assumes that the input sequence does not contain any `Code`
     * types that are defined after `Comment` in `ProgramRepresentation.scala`.
     */
-  def eliminateComments(codes: Seq[Code]): Seq[Code] = ???
+  def eliminateComments(codes: Seq[Code]): Seq[Code] = {
+      codes.flatMap{
+        case Comment(message: String)=> {
+          return Seq();
+        }
+        case Define(label)=>{
+          return Seq(Define(label));
+        }
+        case CodeWord(word)=>{
+          return Seq(CodeWord(word));
+        }
+        case Use(label)=>{
+          return Seq(Use(label));
+        }
+        case BeqBne(bits, label)=>{
+          return Seq(BeqBne(bits, label));
+        }
+        case other=>{
+          impossible(s"Encountered unsupported code ${other} in eliminateComments");
+        }
+      }
+  }
 
   /** Eliminate all `Block`s from a tree of `Code` by flattening the tree into a sequence of
     * `Code`s other than `Block`s.
@@ -110,9 +159,16 @@ object Transformations {
     * Assumes that the input `code` tree does not contain any `Code`
     * types that are defined after `Block` in `ProgramRepresentation.scala`.
     */
+
+
+
   def eliminateBlocks(code: Code): Seq[Code] = code match {
-    case Block(children) => ???
-    case _ => ???
+    case Block(children) => {
+      children.flatMap{
+        eliminateBlocks
+      };  
+    }
+    case _ => return Seq(code);
   }
 
   /** Transform a `Code` tree by applying the function `fun` to transform each node of the tree of type `Code`.
@@ -126,11 +182,27 @@ object Transformations {
   def transformCodeTotal(code: Code, fun: Code=>Code): Code = {
     /** Apply `transformCodeTotal` on all child code nodes of the argument code node `code`. */
     def processChildren(code: Code): Code = code match {
-      case Block(children) => ???
-      case Scope(variables, body) => ???
-      case IfStmt(elseLabel, e1, comp, e2, thens, elses) => ???
-      case Call(procedure, args, isTail) => ???
-      case CallClosure(closure, args, params, isTail) => ???
+      case Block(children) => {
+           children.map({
+            processChildren;
+          })
+        fun(Block(children));
+      }
+      case Scope(variables, body) => fun(Scope(variables, processChildren(body)))
+      case IfStmt(elseLabel, e1, comp, e2, thens, elses)  =>fun(IfStmt(elseLabel, processChildren(e1), processChildren(comp), 
+       processChildren(e2), processChildren(thens), processChildren(elses)));
+      case Call(procedure, args, isTail) => {
+          args.map({
+            processChildren;
+          })
+          fun(Call((procedure), args, isTail));
+      }
+      case CallClosure(closure, args, params, isTail) => {
+        args.map{
+          processChildren;
+        }
+        fun(CallClosure(processChildren(closure), args,params, isTail ))        
+      }
       case _ => code
     }
 
