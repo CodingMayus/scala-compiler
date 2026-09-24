@@ -38,7 +38,6 @@ object A2 {
     val code = Seq[Code](
       CodeWord(SLT(Reg(3), Reg(1), Reg(2))),
       beq(Reg(0), Reg(3), RegOneGreaterOrEqualSigned),
-      Use(RegTwoGreaterSigned),
       Define(RegTwoGreaterSigned),
       CodeWord(ADD(Reg(3), Reg(2),Reg(0))),
       CodeWord(JR(Reg(31))),
@@ -64,7 +63,8 @@ object A2 {
       beq(Reg(0),Reg(3), RegOneGreaterOrEqualUnsigned),
       Define(RegTwoGreaterUnsigned),
       CodeWord(ADD(Reg(3), Reg(0), Reg(2))),
-      Define(RegOneGreaterOrEqualUnsigned),
+      CodeWord(JR(Reg(31))),
+        Define(RegOneGreaterOrEqualUnsigned),
       CodeWord((ADD(Reg(3), Reg(0), Reg(1)))),
       CodeWord(JR(Reg(31)))
     )

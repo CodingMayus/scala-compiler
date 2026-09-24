@@ -91,28 +91,32 @@ object Transformations {
       var location = 0
         code.flatMap {
         case Define(label) => {
-          location += 4;
-          return Seq()
+          Seq()
         };
         case CodeWord(word) => {
           location += 4;
-          return Seq(word)
+          Seq(word)
         };
         case Use(label) => {
           location += 4;
+          if(!symbolTable.contains(label)){
+              sys.error("Error, using undefined label.");
+          }
           val encodedAddress= Word(encodeUnsigned(symbolTable(label)));
-          return Seq(encodedAddress);
+          Seq(encodedAddress);
         };
         case BeqBne(bits, label) => {
           //calculate the offset straight up.
           //make sure the offset can be represented as an immediate thingie.
           val labelMemoryLocation = symbolTable(label)
-          val numberOffset= labelMemoryLocation-location;
+          val numberOffset= ((labelMemoryLocation)-(location+4))/4;
+          // added four here to simulate the program counter ( though there is probably an explicit way to do this .-.)
           if(numberOffset.abs> 65535){
               sys.error("Error: The offset is too big.");
           }
           location += 4;
-          return Word(Bits(bits+++encodeSigned(numberOffset,16))) ;
+          val endSequence = bits++encodeSigned(numberOffset,16)
+          Seq(Word(endSequence)) ;
         };
         case other => impossible(s"Encountered unsupported code $other in eliminateLabels.")
       }
@@ -133,19 +137,19 @@ object Transformations {
   def eliminateComments(codes: Seq[Code]): Seq[Code] = {
       codes.flatMap{
         case Comment(message: String)=> {
-          return Seq();
+          Seq();
         }
         case Define(label)=>{
-          return Seq(Define(label));
+          Seq(Define(label));
         }
         case CodeWord(word)=>{
-          return Seq(CodeWord(word));
+          Seq(CodeWord(word));
         }
         case Use(label)=>{
-          return Seq(Use(label));
+      Seq(Use(label));
         }
         case BeqBne(bits, label)=>{
-          return Seq(BeqBne(bits, label));
+          Seq(BeqBne(bits, label));
         }
         case other=>{
           impossible(s"Encountered unsupported code ${other} in eliminateComments");

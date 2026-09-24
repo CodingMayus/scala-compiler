@@ -1,8 +1,11 @@
 import cs241e.assignments.{A1, Assembler}
+import cs241e.assignments.A2.*;
 import cs241e.mips.State.*
 import cs241e.mips.{Bits, Word}
 import org.scalatest.funsuite.AnyFunSuite
 import cs241e.assignments.ProgramRepresentation;
+import cs241e.mips.*;
+import cs241e.assignments.Assembler.*;
 /* This is an example of a class for running and testing your code. Add other testing methods here
  * and/or create additional classes like this one.
  *
@@ -13,7 +16,7 @@ import cs241e.assignments.ProgramRepresentation;
  */
 
 class A2Tests extends AnyFunSuite {
-  val foo1 = eq[Word](
+  val foo1 = Seq[Word](
     LIS(Reg(1)),
     Word(encodeSigned(-2)),
     LIS(Reg(2)),
