@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="cs241e-build" external.linked.project.path="C:\Users\matth\Downloads\cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca\cs241e\project" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="SBT" external.system.module.type="nestedProject" type="SBT_MODULE" version="4">
+<module external.linked.project.id="cs241e-build" external.linked.project.path="$MODULE_DIR$/../../../project" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="SBT" external.system.module.type="nestedProject" type="SBT_MODULE" version="4">
   <component name="DisplayModuleName">
     <option name="name" value="cs241e-build" />
   </component>
@@ -111,8 +111,8 @@
     </orderEntry>
   </component>
   <component name="SbtModule">
-    <option name="buildForURI" value="file:///C:/Users/matth/Downloads/cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca/cs241e/" />
+    <option name="buildForURI" value="file://$MODULE_DIR$/../../../" />
     <option name="imports" value="_root_.sbt.Keys._, _root_.sbt.ScriptedPlugin.autoImport._, _root_.sbt.plugins.JUnitXmlReportPlugin.autoImport._, _root_.sbt.plugins.MiniDependencyTreePlugin.autoImport._, _root_.org.jetbrains.sbt.GenerateAllManagedSourcesPlugin.autoImport._, _root_.org.jetbrains.sbt.SbtSourcesPlugin.autoImport._, _root_.sbt._, _root_.sbt.nio.Keys._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.ScriptedPlugin, _root_.sbt.plugins.SbtPlugin, _root_.sbt.plugins.SemanticdbPlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.sbt.plugins.MiniDependencyTreePlugin, _root_.org.jetbrains.sbt.GenerateAllManagedSourcesPlugin, _root_.org.jetbrains.sbt.SbtSourcesPlugin, _root_.org.jetbrains.sbt.StructurePlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" />
-    <option name="resolvers" value="https://repo1.maven.org/maven2/|maven|public, C:\Users\matth\.ivy2\cache|ivy|true|Local cache" />
+    <option name="resolvers" value="$USER_HOME$/.ivy2/cache|ivy|true|Local cache, https://repo1.maven.org/maven2/|maven|public" />
   </component>
 </module>

@@ -187,25 +187,25 @@ object Transformations {
     /** Apply `transformCodeTotal` on all child code nodes of the argument code node `code`. */
     def processChildren(code: Code): Code = code match {
       case Block(children) => {
-           children.map({
+           val temp = children.map({
             processChildren;
           })
-        fun(Block(children));
+        fun(Block(temp));
       }
       case Scope(variables, body) => fun(Scope(variables, processChildren(body)))
       case IfStmt(elseLabel, e1, comp, e2, thens, elses)  =>fun(IfStmt(elseLabel, processChildren(e1), processChildren(comp), 
        processChildren(e2), processChildren(thens), processChildren(elses)));
       case Call(procedure, args, isTail) => {
-          args.map({
+        val temp = args.map({
             processChildren;
           })
-          fun(Call((procedure), args, isTail));
+          fun(Call((procedure), temp, isTail));
       }
       case CallClosure(closure, args, params, isTail) => {
-        args.map{
+        val temp  =args.map{
           processChildren;
         }
-        fun(CallClosure(processChildren(closure), args,params, isTail ))        
+        fun(CallClosure(processChildren(closure), temp,params, isTail ))
       }
       case _ => code
     }
@@ -252,7 +252,15 @@ object Transformations {
   def eliminateVarAccessesA3(code: Code, frame: Chunk): Code = {
     def fun: PartialFunction[Code, Code] = {
       case va: VarAccess =>
-        ???
+        {
+          if(va.read){
+            //this is a read so we read
+             frame.load(Reg.framePointer,va.register,va.variable)
+          }else{
+            frame.store(Reg.framePointer, va.variable, va.register)
+          }
+        }
+
     }
 
     transformCode(code, fun)
@@ -264,8 +272,24 @@ object Transformations {
     *
     * Note that `body` could modify registers 1 - 28.
     */
-  def allocateFrameOnStack(body: Code, frame: Chunk): Code =
-    block(???, body, ???)
+  // could regret setting the size of the frame to Reg.result .-.
+  def allocateFrameOnStack(body: Code, frame: Chunk): Code = {
+    block(
+      LIS(Reg.result),
+      CodeWord(Word(encodeUnsigned(frame.bytes))),
+      SUB(Reg.stackPointer,Reg.stackPointer, Reg.result)
+      ,
+      ADD(Reg.framePointer, Reg.stackPointer, Reg(0))
+      ,
+      body,
+      LIS(Reg.result),
+      CodeWord(Word(encodeUnsigned(frame.bytes))),
+      ADD(Reg.stackPointer, Reg.result, Reg.stackPointer),
+      ADD(Reg.framePointer, Reg(0), Reg.stackPointer)
+    )
+    // I highly doubt this is it, i have to deal with setting the framepointer to point below, or above
+    // the stack .-.
+  }
 
   /** A bundle of machine language code in the form of a sequence of `Word`s and a `debugTable` for the `Debugger`. */
   case class MachineCode(words: Seq[Word], debugTable: DebugTable)

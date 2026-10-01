@@ -4,8 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cs241e/cs241e.iml" filepath="$PROJECT_DIR$/.idea/modules/cs241e/cs241e.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cs241e/cs241e.cs241e-build.iml" filepath="$PROJECT_DIR$/.idea/modules/cs241e/cs241e.cs241e-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cs241e/cs241e.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cs241e/cs241e.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cs241e/cs241e.test.iml" filepath="$PROJECT_DIR$/.idea/modules/cs241e/cs241e.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cs241e/cs241e.main~1.iml" filepath="$PROJECT_DIR$/.idea/modules/cs241e/cs241e.main~1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cs241e/cs241e.test~1.iml" filepath="$PROJECT_DIR$/.idea/modules/cs241e/cs241e.test~1.iml" />
     </modules>
   </component>
 </project>

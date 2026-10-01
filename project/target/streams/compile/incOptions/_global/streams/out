@@ -1,5 +1,5 @@
-[debug] Created transactional ClassFileManager with tempDir = C:\Users\matth\Downloads\cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca\cs241e\project\target\scala-2.12\sbt-1.0\classes.bak
-[debug] About to delete class files:
-[debug] We backup class files:
-[debug] Created transactional ClassFileManager with tempDir = C:\Users\matth\Downloads\cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca\cs241e\project\target\scala-2.12\sbt-1.0\classes.bak
-[debug] Removing the temporary directory used for backing up class files: C:\Users\matth\Downloads\cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca\cs241e\project\target\scala-2.12\sbt-1.0\classes.bak
+[0m[[0m[0mdebug[0m] [0m[0mCreated transactional ClassFileManager with tempDir = /Users/matthewyu/Downloads/cs241e/project/target/scala-2.12/sbt-1.0/classes.bak[0m
+[0m[[0m[0mdebug[0m] [0m[0mAbout to delete class files:[0m
+[0m[[0m[0mdebug[0m] [0m[0mWe backup class files:[0m
+[0m[[0m[0mdebug[0m] [0m[0mCreated transactional ClassFileManager with tempDir = /Users/matthewyu/Downloads/cs241e/project/target/scala-2.12/sbt-1.0/classes.bak[0m
+[0m[[0m[0mdebug[0m] [0m[0mRemoving the temporary directory used for backing up class files: /Users/matthewyu/Downloads/cs241e/project/target/scala-2.12/sbt-1.0/classes.bak[0m

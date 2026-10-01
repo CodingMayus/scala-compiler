@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="cs241e [file:///C:/Users/matth/Downloads/cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca/cs241e/]" external.linked.project.path="C:\Users\matth\Downloads\cs241e-handout-2609.01-6affb3c018998a51b90d58e18f2d7cfac5ceeeca\cs241e" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="SBT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="cs241e [file:///Users/matthewyu/Downloads/cs241e/]" external.linked.project.path="$MODULE_DIR$/../../.." external.root.project.path="$MODULE_DIR$/../../.." external.system.id="SBT" type="JAVA_MODULE" version="4">
   <component name="DisplayModuleName">
     <option name="name" value="cs241e" />
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_26" inherit-compiler-output="true">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_27" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../..">
       <excludeFolder url="file://$MODULE_DIR$/../../../target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="cs241e.main" />
-    <orderEntry type="module" module-name="cs241e.test" production-on-test="" />
+    <orderEntry type="module" module-name="cs241e.main~1" />
+    <orderEntry type="module" module-name="cs241e.test~1" production-on-test="" />
   </component>
 </module>
