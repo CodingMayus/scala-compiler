@@ -75,7 +75,7 @@ object MemoryManagement {
       */
     private val variableToOffset: Map[Variable, Int] = variables.zipWithIndex.map{
       case(letter, index)=>
-      (letter, (index+1)*4)
+      (letter, (index+2)*4)
     }.toMap;
 
     /** Generate code to load the value at the offset corresponding to `variable` into `register`.
@@ -120,7 +120,7 @@ object MemoryManagement {
       Block(Seq[Code](
         LIS(Reg.scratch),
         CodeWord(Word(encodeUnsigned(bytes)))
-        ,SW(Reg.result, 0, Reg.scratch)
+        ,SW(Reg.scratch, 0, Reg.result)
       )++variableCode)
   }
 
@@ -172,7 +172,7 @@ object MemoryManagement {
   /** Code that copies a chunk whose address is in `fromRegister` to the address in `toRegister`.
     * `toRegister` and `fromRegister` cannot be one of the registers in `modifiedRegisters`.
     * Be careful to modify only the registers in `modifiedRegisters` in the copying code that
-    * you generate. If you need to modify additional registers, add them to the `modifiedRegisters`
+    * you generate. If you need to modify addtional registers, add them to the `modifiedRegisters`
     * set in order to be notified if you call `copyChunk` with one of these registers as `toRegister`
     * or `fromRegister`.
     *

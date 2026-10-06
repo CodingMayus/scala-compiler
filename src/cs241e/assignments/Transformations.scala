@@ -190,26 +190,27 @@ object Transformations {
            val temp = children.map({
             processChildren;
           })
-        fun(Block(temp));
+        Block(temp)
       }
-      case Scope(variables, body) => fun(Scope(variables, processChildren(body)))
-      case IfStmt(elseLabel, e1, comp, e2, thens, elses)  =>fun(IfStmt(elseLabel, processChildren(e1), processChildren(comp), 
-       processChildren(e2), processChildren(thens), processChildren(elses)));
+      case Scope(variables, body) => Scope(variables, processChildren(body))
+      case IfStmt(elseLabel, e1, comp, e2, thens, elses)  =>IfStmt(elseLabel, processChildren(e1), processChildren(comp),
+       processChildren(e2), processChildren(thens), processChildren(elses));
       case Call(procedure, args, isTail) => {
         val temp = args.map({
             processChildren;
           })
-          fun(Call((procedure), temp, isTail));
+          Call((procedure), temp, isTail);
       }
       case CallClosure(closure, args, params, isTail) => {
         val temp  =args.map{
           processChildren;
         }
-        fun(CallClosure(processChildren(closure), temp,params, isTail ))
+        CallClosure(processChildren(closure), temp,params, isTail )
       }
-      case _ => code
+      case _ =>{code}
     }
-
+  //  println(processChildren(code))
+    //println(fun(processChildren(code)))
     fun(processChildren(code))
   }
 
@@ -221,7 +222,9 @@ object Transformations {
     * for an explanation of `PartialFunction`.
     */
   def transformCode(code: Code, fun: PartialFunction[Code, Code]): Code = {
-    transformCodeTotal(code, code => if(fun.isDefinedAt(code)) fun(code) else code)
+    transformCodeTotal(code, code =>{ if(fun.isDefinedAt(code))fun(code) else
+      {
+        code}})
   }
 
   /* ############################################################### */
@@ -260,9 +263,12 @@ object Transformations {
             frame.store(Reg.framePointer, va.variable, va.register)
           }
         }
-
+      case bl: Block=>
+        {
+          val temp = bl.stmts.map{stmt =>transformCode(stmt,fun)};
+          Block(temp)
+        }
     }
-
     transformCode(code, fun)
   }
 
@@ -275,17 +281,12 @@ object Transformations {
   // could regret setting the size of the frame to Reg.result .-.
   def allocateFrameOnStack(body: Code, frame: Chunk): Code = {
     block(
-      LIS(Reg.result),
-      CodeWord(Word(encodeUnsigned(frame.bytes))),
-      SUB(Reg.stackPointer,Reg.stackPointer, Reg.result)
+      Stack.allocate(frame)
       ,
       ADD(Reg.framePointer, Reg.stackPointer, Reg(0))
       ,
       body,
-      LIS(Reg.result),
-      CodeWord(Word(encodeUnsigned(frame.bytes))),
-      ADD(Reg.stackPointer, Reg.result, Reg.stackPointer),
-      ADD(Reg.framePointer, Reg(0), Reg.stackPointer)
+      Stack.pop
     )
     // I highly doubt this is it, i have to deal with setting the framepointer to point below, or above
     // the stack .-.
