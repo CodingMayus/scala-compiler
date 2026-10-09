@@ -337,8 +337,18 @@ object Transformations {
     * Hint: Use `transformCode`.
     */
   def eliminateScopes(code: Code): (Code, Seq[Variable]) = {
-    ???
-    (???, ???)
+    var varLst:Seq[Variable] = Seq();
+    def removeScopes: PartialFunction[Code, Code] = {
+      case scope: Scope => {
+
+        (scope.variables).foreach(vari =>{varLst = varLst :+ vari});
+
+        // can also error check here
+        block(scope.code)
+      }
+    }
+
+    (transformCode( code, removeScopes), varLst)
   }
 
   /** Eliminate all `IfStmt`s from a tree of `Code` by translating them to simpler pieces
@@ -353,9 +363,23 @@ object Transformations {
     */
   def eliminateIfStmts(code: Code): Code = {
     def fun: PartialFunction[Code, Code] = {
-      ???
+      case ifstmt: IfStmt => {
+    val tempVar = new Variable("tempVar");
+        block(
+          ifstmt.e1,
+          write(tempVar,Reg.result),
+          ifstmt.e2,
+          read(Reg.scratch, tempVar),
+          ifstmt.comp,
+          
+          
+          
+        );
+        
+      }
+    
     }
-
+    
     transformCode(code, fun)
   }
 

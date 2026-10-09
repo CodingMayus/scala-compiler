@@ -35,7 +35,17 @@ object CodeBuilders {
     * must not modify the values of any other registers that are already listed in Reg.scala.
     */
   def binOp(e1: Code, op: Code, e2: Code): Code = {
-    ???
+    val tempVar = new Variable("tempVar");
+
+      Scope(Seq(tempVar),
+        block(
+          e1,
+          write(tempVar,Reg.scratch),
+          e2,
+          read(Reg.result, tempVar),
+          op
+        )
+      )
   }
 
   /* The following `Code`s are intended to be used as the `op` argument to `binOp`.
@@ -49,13 +59,14 @@ object CodeBuilders {
    * need more than these registers, you may add new scratch registers to Reg.scala. The generated code
    * must not modify the values of any other registers that are already listed in Reg.scala.
    */
-  lazy val plus: Code = ???
-  lazy val minus: Code = ???
-  lazy val times: Code = ???
-  lazy val divide: Code = ???
-  lazy val remainder: Code = ???
-  lazy val divideUnsigned: Code = ???
-  lazy val remainderUnsigned: Code = ???
+  lazy val plus: Code = ADD(Reg.result, Reg.result, Reg.scratch)
+  lazy val minus: Code = SUB(Reg.result, Reg.result, Reg.scratch)
+  lazy val times: Code = block(MULT( Reg.result, Reg.scratch), MFHI(Reg.result), MFLO(Reg.result))
+  lazy val divide: Code = block(DIV(Reg.result, Reg.scratch), MFHI(Reg.result))
+  // is this the correct behaviour?
+  lazy val remainder: Code = block(DIV(Reg.result, Reg.scratch), MFLO(Reg.result))
+  lazy val divideUnsigned: Code = block(DIVU(Reg.result, Reg.scratch), MFHI(Reg.result))
+  lazy val remainderUnsigned: Code = block(DIV(Reg.result, Reg.scratch), MFLO(Reg.result))
 
   /* The following `Code`s are intended to be used as the `comp` argument to `IfStmt`.
    * They should expect two operands in `Reg.scratch` and `Reg.result`, interpret them as two's-complement
@@ -65,13 +76,19 @@ object CodeBuilders {
    * need more than these registers, you may add new scratch registers to Reg.scala. The generated code
    * must not modify the values of any other registers that are already listed in Reg.scala.
    */
-  def eqCmp(label: Label): Code = ???
-  def neCmp(label: Label): Code = ???
-  def ltCmp(label: Label): Code = ???
-  def gtCmp(label: Label): Code = ???
-  def leCmp(label: Label): Code = ???
-  def geCmp(label: Label): Code = ???
-  def gtUnsignedCmp(label: Label): Code = ???
+  def eqCmp(label: Label): Code = (bne(Reg.scratch, Reg.result, label))
+  def neCmp(label: Label): Code = (beq(Reg.scratch, Reg.result, label))
+  def ltCmp(label: Label): Code = block(SLT(Reg.result,Reg.result, Reg.scratch),
+    bne(Reg.result, Reg.zero, label)
+  )
+  def gtCmp(label: Label): Code = block(SLT(Reg.result, Reg.scratch, Reg.result),
+    bne(Reg.result, Reg.zero, label))
+  def leCmp(label: Label): Code = block(SLT(Reg.result, Reg.scratch, Reg.result),
+    beq(Reg.result, Reg.zero, label))
+  def geCmp(label: Label): Code = block(SLT(Reg.result,Reg.result, Reg.scratch),
+    beq(Reg.result, Reg.zero, label))
+  def gtUnsignedCmp(label: Label): Code = block(SLTU(Reg.result, Reg.scratch, Reg.result),
+    bne(Reg.result, Reg.zero, label))
 
   /** Generates code that evaluates `expr` to yield a memory address, then loads the word from that address
     * into `Reg.result`.
@@ -80,7 +97,15 @@ object CodeBuilders {
     * need more than these registers, you may add new scratch registers to Reg.scala. The generated code
     * must not modify the values of any other registers that are already listed in Reg.scala.
     **/
-  def deref(expr: Code): Code = ???
+
+  // assumes after evaluating the Code, expr, it loads the result into Reg.result
+  def deref(expr: Code): Code = (
+              block(
+                expr,
+                LW(Reg.result,0, Reg.result)
+              )
+
+  )
 
   /** Generates code that evaluates `target` to yield a memory address, then evaluates `expr` to yield a value,
     * then stores the value into the memory address.
@@ -89,7 +114,18 @@ object CodeBuilders {
     * need more than these registers, you may add new scratch registers to Reg.scala. The generated code
     * must not modify the values of any other registers that are already listed in Reg.scala.
     */
-  def assignToAddr(target: Code, expr: Code): Code = ???
+  def assignToAddr(target: Code, expr: Code): Code = {
+
+    val tempVar= new Variable("tempVar");
+    Scope( Seq(tempVar),
+    block(
+      target,
+      write(tempVar,Reg.result),
+      expr,
+      read(Reg.scratch, tempVar),
+      SW(Reg.result, 0, Reg.scratch)
+    ))
+  }
 
   /** Generates code that implements a while loop. The generated code should evaluate `e1` and `e2`,
     * compare them using `comp`, and if the comparison succeeds, it should execute `body` and repeat
@@ -100,7 +136,27 @@ object CodeBuilders {
     * must not modify the values of any other registers that are already listed in Reg.scala.
     */
   def whileLoop(e1: Code, comp: Label=>Code, e2: Code, body: Code): Code = {
-    ???
+    val loopStart:Label = new Label("loopStart");
+    val expressionOne= new Variable("expressionOne")
+    // how does this compiler handle tempVariable repeats ?? 
+    val continue:Label = new Label("continue");
+    val loopEnd: Label = new Label("loopEnd")
+    Scope(
+    Seq(expressionOne),
+      block(
+      Define(loopStart),
+        e1,
+        write(expressionOne,Reg.result),
+        e2,
+        read(Reg.scratch,expressionOne),
+      comp(loopEnd),
+        body,
+        LIS(Reg.scratch),
+        Use(loopStart),
+        JR(Reg.scratch),
+        Define(loopEnd)
+    )
+    )
   }
 
   

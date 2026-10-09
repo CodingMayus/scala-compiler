@@ -71,7 +71,26 @@ object A4 {
     * Otherwise copy the last element of the array into register 3.
     */
   lazy val lastElement: MachineCode = {
-    val code: Code = ???
+    val empty = new Label("empty");
+    val code: Code = {
+
+      block(
+        bne(Reg(2), Reg(0), empty),
+          LIS(Reg(3)),
+        Word(encodeSigned(-1)),
+        ADD(Reg(2), Reg(3), Reg(2)),
+        ADD(Reg(1), Reg(2), Reg(1)),
+        LW(Reg(3), 0,Reg(1)),
+          JR(Reg(31)),
+        Define(empty),
+        LIS(Reg(1)),
+        Word(encodeSigned(-1)),
+        ADD(Reg(3), Reg(0), Reg(1)),
+        JR(Reg(31))
+      )
+
+
+    }
     compilerA4(code)
   }
 
@@ -81,8 +100,18 @@ object A4 {
     * Assume the array is not empty.
     */
   lazy val arrayMaximum: MachineCode = {
-    
-    val code: Code = ???
+
+    val i:Variable= new Variable("I")
+    val maximum:Variable = new Variable("Maximum")
+    var end:Label = new Label("End")
+    val code: Code =
+      Scope(Seq(i,maximum),
+     block( whileLoop(read(Reg(3),i),ltCmp,ADD(Reg(4), Reg(2), Reg(0)),block(
+
+        read(Reg(3), i),
+
+     )),
+    JR(Reg(31))))
     compilerA4(code)
   }
 
