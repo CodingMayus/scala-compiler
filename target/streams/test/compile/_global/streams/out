@@ -1,0 +1,18 @@
+[warn] -- Warning: /Users/matthewyu/Downloads/cs241e/test/src/A1Tests.scala:65:2 ------
+[warn] 65 |  for ( i <- -4 to 3){
+[warn]    |  ^
+[warn]    |  Line is indented too far to the left, or a `}` is missing
+[warn] -- Warning: /Users/matthewyu/Downloads/cs241e/test/src/A2Tests.scala:1:0 -------
+[warn] 1 |import cs241e.assignments.{A1, Assembler}
+[warn]   |^
+[warn]   |No class, trait or object is defined in the compilation unit.
+[warn]   |The incremental compiler cannot record the dependency information in such case.
+[warn]   |Some errors like unused import referring to a non-existent class might not be reported.
+[warn] 2 |import cs241e.assignments.A2.*;
+[warn] 3 |import cs241e.mips.State.*
+[warn] 4 |import cs241e.mips.{Bits, Word}
+[warn] 5 |import org.scalatest.funsuite.AnyFunSuite
+[warn] 6 |import cs241e.assignments.ProgramRepresentation;
+[warn] 7 |import cs241e.mips.*;
+[warn] 8 |import cs241e.assignments.Assembler.*;
+[warn] two warnings found

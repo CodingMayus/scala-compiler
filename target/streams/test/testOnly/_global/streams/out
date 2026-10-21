@@ -1,0 +1,33 @@
+[debug] Running TaskDef(A3Tests, org.scalatest.tools.Framework$$anon$1@133bca83, false, [SuiteSelector])
+[debug] Running TaskDef(A1Tests, org.scalatest.tools.Framework$$anon$1@133bca83, false, [SuiteSelector])
+[debug] Running TaskDef(A4Tests, org.scalatest.tools.Framework$$anon$1@133bca83, false, [SuiteSelector])
+[info] A4Tests:
+[info] - scala
+[info] - lacs
+[info] - arrayScala
+[info] - arrayLacs
+[info] - debugger
+[info] - lacs result
+[info] - arithmetic ops
+[info] - comparisons
+[info] - nested ifs and scopes
+[info] - deref and assignToAddr
+[info] - whileLoop sum
+[info] - lastElement
+[info] - arrayMaximum
+[info] - outputLetters
+[info] - printInteger
+[info] A3Tests:
+[info] - print
+[info] A1Tests:
+[info] - decodeUnsigned
+[info] - Functions
+[info] Run completed in 3 seconds, 988 milliseconds.
+[info] Total number of tests run: 18
+[info] Suites: completed 3, aborted 0
+[info] Tests: succeeded 18, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[debug] Passed tests:
+[debug] 	A4Tests
+[debug] 	A3Tests
+[debug] 	A1Tests

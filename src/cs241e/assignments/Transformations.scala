@@ -108,10 +108,13 @@ object Transformations {
         case BeqBne(bits, label) => {
           //calculate the offset straight up.
           //make sure the offset can be represented as an immediate thingie.
+          if(!symbolTable.contains(label)){
+            sys.error(s"Error: branch to undefined label: ${label}.")
+          }
           val labelMemoryLocation = symbolTable(label)
           val numberOffset= ((labelMemoryLocation)-(location+4))/4;
           // added four here to simulate the program counter ( though there is probably an explicit way to do this .-.)
-          if(numberOffset.abs> 65535){
+          if(numberOffset < -32768 || numberOffset > 32767){
               sys.error("Error: The offset is too big.");
           }
           location += 4;
@@ -185,32 +188,19 @@ object Transformations {
     */
   def transformCodeTotal(code: Code, fun: Code=>Code): Code = {
     /** Apply `transformCodeTotal` on all child code nodes of the argument code node `code`. */
-    def processChildren(code: Code): Code = code match {
-      case Block(children) => {
-           val temp = children.map({
-            processChildren;
-          })
-        Block(temp)
+    def processChildren(code: Code): Code = {
+      // each child must be fully transformed (its own children first, then `fun` applied to it)
+      def recur(child: Code): Code = transformCodeTotal(child, fun)
+      code match {
+        case Block(children) => Block(children.map(recur))
+        case Scope(variables, body) => Scope(variables, recur(body))
+        case IfStmt(elseLabel, e1, comp, e2, thens, elses) =>
+          IfStmt(elseLabel, recur(e1), recur(comp), recur(e2), recur(thens), recur(elses))
+        case Call(procedure, args, isTail) => Call(procedure, args.map(recur), isTail)
+        case CallClosure(closure, args, params, isTail) => CallClosure(recur(closure), args.map(recur), params, isTail)
+        case _ => code
       }
-      case Scope(variables, body) => Scope(variables, processChildren(body))
-      case IfStmt(elseLabel, e1, comp, e2, thens, elses)  =>IfStmt(elseLabel, processChildren(e1), processChildren(comp),
-       processChildren(e2), processChildren(thens), processChildren(elses));
-      case Call(procedure, args, isTail) => {
-        val temp = args.map({
-            processChildren;
-          })
-          Call((procedure), temp, isTail);
-      }
-      case CallClosure(closure, args, params, isTail) => {
-        val temp  =args.map{
-          processChildren;
-        }
-        CallClosure(processChildren(closure), temp,params, isTail )
-      }
-      case _ =>{code}
     }
-  //  println(processChildren(code))
-    //println(fun(processChildren(code)))
     fun(processChildren(code))
   }
 
@@ -262,11 +252,6 @@ object Transformations {
           }else{
             frame.store(Reg.framePointer, va.variable, va.register)
           }
-        }
-      case bl: Block=>
-        {
-          val temp = bl.stmts.map{stmt =>transformCode(stmt,fun)};
-          Block(temp)
         }
     }
     transformCode(code, fun)
@@ -340,11 +325,8 @@ object Transformations {
     var varLst:Seq[Variable] = Seq();
     def removeScopes: PartialFunction[Code, Code] = {
       case scope: Scope => {
-
-        (scope.variables).foreach(vari =>{varLst = varLst :+ vari});
-
-        // can also error check here
-        block(scope.code)
+        varLst = varLst ++ scope.variables
+        scope.code
       }
     }
 
@@ -364,20 +346,24 @@ object Transformations {
   def eliminateIfStmts(code: Code): Code = {
     def fun: PartialFunction[Code, Code] = {
       case ifstmt: IfStmt => {
-    val tempVar = new Variable("tempVar");
-        block(
-          ifstmt.e1,
-          write(tempVar,Reg.result),
-          ifstmt.e2,
-          read(Reg.scratch, tempVar),
-          ifstmt.comp,
-          
-          
-          
-        );
-        
+        // e1 goes to Reg.scratch and e2 stays in Reg.result before `comp`, which branches to elseLabel on failure.
+        val tempVar = new Variable("ifStmt temp")
+        val endLabel = new Label("endIf")
+        Scope(Seq(tempVar),
+          block(
+            ifstmt.e1,
+            write(tempVar, Reg.result),
+            ifstmt.e2,
+            read(Reg.scratch, tempVar),
+            ifstmt.comp,
+            ifstmt.thens,
+            beq(Reg.zero, Reg.zero, endLabel),
+            Define(ifstmt.elseLabel),
+            ifstmt.elses,
+            Define(endLabel)
+          )
+        )
       }
-    
     }
     
     transformCode(code, fun)
