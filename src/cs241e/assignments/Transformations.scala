@@ -428,6 +428,7 @@ object Transformations {
       def eliminateCalls(code: Code): Code = {
         def fun: PartialFunction[Code, Code] = {
           case call: Call =>
+            
             // Note: `caller` does not need to be used in the solution for `eliminateCalls`.
             // It is made explicit here only to distinguish it from `callee`.
             val caller = currentProcedure
@@ -445,7 +446,10 @@ object Transformations {
             Scope(tempVars, block(
               evaluatedArgs,
               Stack.allocate(paramChunks(currentProcedure)),
-              storeEvaluatedArgs
+              storeEvaluatedArgs,
+              LIS(Reg.targetPC),
+              Use(currentProcedure.label),
+              JALR(Reg.targetPC)
             ))
         }
         transformCode(code, fun)

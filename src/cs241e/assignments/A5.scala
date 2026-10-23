@@ -191,6 +191,6 @@ object A5 {
     /* You may, but are not required to, define and use more procedures in addition to `treeHeight`.
      * `treeHeight` must be the first procedure in the sequence that is returned.
      */
-    Seq(treeHeight, ???, )
+    Seq(treeHeight, recurseTree)
   }
 }
