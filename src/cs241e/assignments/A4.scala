@@ -74,12 +74,31 @@ object A4 {
     * This is a `def` so that each use builds fresh `Code` (with fresh temporary `Variable`s); reusing the same
     * `Scope` twice in a program would make `compilerA4` see the same variable twice.
     */
-  private def elementAddr(index: Code): Code =
-    binOp(ADD(Reg.result, Reg.input1), plus, binOp(index, times, const(4)))
-
+  
+  private def elementAddr(index: Code):Code=
+    binOp(ADD(Reg.result, Reg.input1,Reg.zero), plus, binOp(index, times, const(4)))
+    
   /** Code that prints the character whose ASCII value is computed by `expr`. */
-  private def printChar(expr: Code): Code = assignToAddr(block(LIS(Reg.result), CPU.printAddr), expr)
+  private def printChar(expr: Code): Code = 
+    
+    
+    
+    
+    
+    
+    assignToAddr(block(LIS(Reg.result), CPU.printAddr), expr)
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   /** Register 1 holds the address of the beginning of an array of 32-bit integers.
     * Register 2 holds the number of elements in the array.
     * If the array is empty place the value -1 in register 3.
@@ -100,6 +119,12 @@ object A4 {
     * Assume the array is not empty.
     */
   lazy val arrayMaximum: MachineCode = {
+    
+    
+    
+    
+    
+    
     val i = new Variable("i")
     val maximum = new Variable("maximum")
     def element = deref(elementAddr(read(Reg.result, i)))

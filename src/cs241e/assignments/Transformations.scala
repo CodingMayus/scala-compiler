@@ -432,9 +432,22 @@ object Transformations {
             // It is made explicit here only to distinguish it from `callee`.
             val caller = currentProcedure
             val callee = call.procedure
-            ???
+            val args = call.arguments
+            val params = callee.parameters
+            val tempVars = createTempVars(params)
+            val evaluatedArgs:Code= Block((tempVars.zip(args)).map((tempVar, arg)=>block(arg,
+              write(tempVar,Reg.result))))
+            val storeEvaluatedArgs:Code = Block(params.map(
+              param=>block(paramChunks(currentProcedure).load(Reg.result, Reg.scratch,param),
+                paramChunks(currentProcedure).store(
+                Reg.result,param, Reg.scratch))
+              ))
+            Scope(tempVars, block(
+              evaluatedArgs,
+              Stack.allocate(paramChunks(currentProcedure)),
+              storeEvaluatedArgs
+            ))
         }
-
         transformCode(code, fun)
       }
 
@@ -444,7 +457,12 @@ object Transformations {
       val (code3, variables) = eliminateScopes(code2)
       assert(variables.distinct == variables)
 
-      val frame = Chunk(???)
+
+
+      var paramPtr = new Variable("paramPtr")
+      var dynamicLink = new Variable("dynamicLink")
+      var savedPC = new Variable("savedPC")
+      val frame = Chunk(variables++Seq(paramPtr, dynamicLink, savedPC))
 
       /** Adds a prologue and epilogue to the `code` of a procedure.
         *
@@ -471,11 +489,21 @@ object Transformations {
         * Hint: this method can use the `frame` from its enclosing method `compileProcedure`.
         */
       def addEntryExit(code: Code): Code = {
+
         val enter = block(
-          ???
+          ADD(Reg.savedParamPtr, Reg.result, Reg.zero),
+          Stack.allocate(frame), // returns stack pointer but which we can treat as a frame pointer here.
+          frame.store(Reg.result, dynamicLink, Reg.framePointer ),
+          ADD(Reg.framePointer, Reg.result, Reg.zero),
+          frame.store(Reg.framePointer, savedPC,Reg.link),
+          frame.store(Reg.framePointer, paramPtr, Reg.savedParamPtr)
         )
         val exit = block(
-          ???
+          frame.load(Reg.framePointer,Reg.link, savedPC),
+          frame.load(Reg.framePointer, Reg.framePointer, dynamicLink),
+          Stack.pop,
+          Stack.pop,
+          JR(Reg.link)
         )
         block(Define(currentProcedure.label), enter, code, exit)
       }
@@ -497,7 +525,19 @@ object Transformations {
         * Hint: this method can use the `frame` from its enclosing procedure `compileProcedure`.
         */
       def eliminateVarAccessesA5(code: Code): Code = {
-        def fun: PartialFunction[Code, Code] = ???
+        def fun: PartialFunction[Code, Code] ={
+          case variable:VarAccess=> {
+              if(variable.read){
+                variable.
+                frame.load(Reg.framePointer, variable.register,variable.variable);
+              }else{
+                
+                frame.store(Reg.framePointer,variable.variable,variable.register)
+              }
+            block()
+        
+          }
+        }
 
         transformCode(code, fun)
       }

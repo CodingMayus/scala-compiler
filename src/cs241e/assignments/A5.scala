@@ -15,20 +15,28 @@ package cs241e.assignments
 
 import ProgramRepresentation.*
 import CodeBuilders.*
+import Assembler.*
+import cs241e.mips.Word
 
 object A5 {
   /** The code of `printInteger` from Assignment 4 encapsulated as a `Procedure`. The procedure should have
     * exactly one parameter, the integer to be printed. */
   lazy val printProcedure: Procedure = {
-    ???
-    val procedure = new Procedure("printProcedure", ???)
-    procedure.code = block(
+    val printedInt = new Variable("printedInt")
+    val storedInput = new Variable("storedInput")
+    val procedure = new Procedure("printProcedure", Seq(printedInt))
+    procedure.code = 
       // You may add code here before and/or after `A4.printIntegerCode`. If you do not want any
       // code before or after, replace the ??? with an empty `block()`.
-      ???,
-      A4.printIntegerCode,
-      ???
-    )
+      
+      Scope(Seq(storedInput),
+        block(
+        write(storedInput, Reg(1)),
+        read(Reg(1), printedInt),
+        A4.printIntegerCode,
+          read(Reg(1), storedInput)
+        )
+      )
     procedure
   }
 
@@ -41,9 +49,17 @@ object A5 {
     * Test this procedure by compiling it with `printProcedure` and running it on various arrays.
     */
   lazy val printArray: Procedure = {
-    ???
-    val procedure = new Procedure("printArray", ???)
-    procedure.code = ???
+    val arrayAddress = new Variable("arrayAddress");
+    val numOfElements = new Variable("numOfElements");
+    val i = new Variable("i");
+    val procedure = new Procedure("printArray", Seq(arrayAddress, numOfElements))
+    procedure.code = 
+      Scope(Seq(i),block(
+        assign(i,Assembler.ADD(Reg.zero,Reg.zero,Reg.zero)),
+        whileLoop(read(Reg.result, i),ltCmp, read(Reg.result, numOfElements),
+          Call(printProcedure,Seq(read(Reg.result,i )), false)
+        )
+      ))
     procedure
   }
 
@@ -92,15 +108,89 @@ object A5 {
     *
     * This example tree has height 3.
     */
+  
+  def const(i:Int):Code={
+  block(
+    Assembler.LIS(Reg(3)), 
+    (Word(encodeSigned(i)))
+  )
+  
+  }
+  def getArrayIndex(array:Variable,i:Variable):Code={
+             deref(binOp(read(Reg.result, array), plus, binOp(const(4),times, read(Reg.result, i))))
+  }
+  def getLeft(array:Variable,i:Variable):Code={
+    
+      deref(binOp(read(Reg.result, array),plus,
+        binOp(const(4), times,
+          binOp(read(Reg.result,i), plus, const(1))
+        )
+      ))
+  }
+  def getRight(array:Variable, i:Variable):Code= {
+    deref(binOp(read(Reg.result, array), plus,
+      binOp(const(4), times,
+        binOp(read(Reg.result, i), plus, const(2))
+      )
+    ))
+  }
+  
   lazy val treeHeight: Seq[Procedure] = {
     val array = new Variable("array")
     val length = new Variable("length")
     val treeHeight = new Procedure("treeHeight", Seq(array, length))
+    //param
+    // temp variables.
+    val node = new Variable("node")
+    val recurseArray = new Variable("recurseArray")
+    val recurseLength = new Variable("recurseLength")
+    val recurseTree = new Procedure("recurseTree", Seq(recurseArray, recurseLength,node))
+    val left = new Variable("left");
+    val right = new Variable("right");
+    val evaluatedLeft = new Variable("evaluatedLeft");
+    val evaluatedRight = new Variable("evaluatedRight")
     
-    treeHeight.code = ???
+    treeHeight.code = block(
+        Call(recurseTree,Seq(
+          read(Reg.result, array),
+          read(Reg.result, length), 
+          ADD(Reg.result, Reg.zero, Reg.zero) )
+        )
+    )
+    recurseTree.code=
+      Scope(Seq(left, right, evaluatedLeft),
+        block(
+          ifStmt(getArrayIndex(array,node),eqCmp,const(-1),
+            ADD(Reg.result, Reg.zero, Reg.zero),
+            block(
+              
+                assign(left, getLeft(recurseArray, node)),
+                assign(right, getRight(recurseArray, node)),
+                Call(recurseTree, Seq(read(Reg.result, recurseArray),
+                                      read(Reg.result, recurseLength),
+                                      binOp(read(Reg.result, node), plus, const(1))),false),
+              write(evaluatedLeft,Reg.result),
+               Call(recurseTree, Seq(read(Reg.result, recurseArray),
+                read(Reg.result, recurseLength),
+                binOp(read(Reg.result, node), plus, const(2))),false),
+              write(evaluatedRight, Reg.result),
+              ifStmt(read(Reg.result,evaluatedLeft),gtCmp, read(Reg.result, evaluatedRight),
+                binOp(read(Reg.result, evaluatedLeft), plus, const(1)),
+                binOp(read(Reg.result, evaluatedRight), plus, const(1))),
+              )
+               
+            )
+        )
+      )
+      
+      
+      
+      
+      
+      
     /* You may, but are not required to, define and use more procedures in addition to `treeHeight`.
      * `treeHeight` must be the first procedure in the sequence that is returned.
      */
-    Seq(treeHeight, ??? )
+    Seq(treeHeight, ???, )
   }
 }
