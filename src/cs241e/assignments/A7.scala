@@ -101,66 +101,24 @@ object A7 {
       case("start",'0')=>"0"
       case("start", '-')=>"negative"
       case("start", '1')=>"oneFirst"
-
-
-
-
-      case("negative", '0')=>"0"
-      case("negative",'1')=>"oneFirstNegative"
-      case("negative", '2')=>"otherFirstNegative"
-      case("negative", '3')=>"otherFirstNegative"
-      case("negative", '4')=>"otherFirstNegative"
-      case("negative", '5')=>"otherFirstNegative"
-      case("negative", '6')=>"otherFirstNegative"
-      case("negative", '7')=>"otherFirstNegative"
-      case("negative", '8')=>"otherFirstNegative"
-      case("negative", '9')=>"otherFirstNegative"
-
-
-        case("oneFirstNegative",'0')=>"secondNegative"
-        case("oneFirstNegative", '1')=>"secondNegative"
-        case("oneFirstNegative", '2')=>"secondNegative"
-
+      
+        case("negative", '0')=>"0"
+        case("negative",'1')=> "oneFirstNegative"
+        case("negative", c) if c>='2' && c<='9' => "otherFirstNegative"
+        
+        case("oneFirstNegative",c)if c>='0' && c<='2' => "secondNegative"
+      
         case("otherFirstNegative",c ) if c>='0' && c<='9' => "secondNegative"
         
         case("secondNegative",c) if c>='0' && c <='8'=> "thirdNegative"
       
-      
-        case("start",'2')=>"otherFirst"
-        case("start", '3')=>"otherFirst"
-        case("start", '4')=>"otherFirst"
-        case("start", '5')=>"otherFirst"
-        case("start", '6')=>"otherFirst"
-        case("start", '7')=>"otherFirst"
-        case("start", '8')=>"otherFirst"
-        case("start",'9')=>"otherFirst"
+        case("start", c) if c>='2' && c<='9'=> "otherFirst"
+        
+        case("oneFirst", c) if c>='0' && c<='2' => "second"
+         
+        case("otherFirst", c) if c>='0' && c<='9' => "second"
 
-
-        case("oneFirst", '0')=> "second"
-        case("oneFirst",'1')=>"second"
-        case("oneFirst",'2')=>"second"
-
-        case ("otherFirst", '0') => "second"
-        case ("otherFirst", '1') => "second"
-        case ("otherFirst", '2') => "second"
-        case ("otherFirst", '3') => "second"
-        case ("otherFirst", '4') => "second"
-        case ("otherFirst", '5') => "second"
-        case ("otherFirst", '6') => "second"
-        case ("otherFirst", '7') => "second"
-        case ("otherFirst", '8') => "second"
-        case ("otherFirst", '9') => "second"
-
-        case("second", '0')=>"third"
-        case ("second", '1') => "third"
-        case ("second", '2') => "third"
-        case ("second", '3') => "third"
-        case ("second", '4') => "third"
-        case ("second", '5') => "third"
-        case ("second", '6') => "third"
-       case ("second", '7') => "third"
-
-
+        case("second",c) if c>='0' && c<='7' => "second"
     }
   )
 
