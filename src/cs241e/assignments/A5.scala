@@ -23,19 +23,16 @@ object A5 {
     * exactly one parameter, the integer to be printed. */
   lazy val printProcedure: Procedure = {
     val printedInt = new Variable("printedInt")
-    val storedInput = new Variable("storedInput")
     val procedure = new Procedure("printProcedure", Seq(printedInt))
     procedure.code = 
       // You may add code here before and/or after `A4.printIntegerCode`. If you do not want any
       // code before or after, replace the ??? with an empty `block()`.
       
-      Scope(Seq(storedInput),
+
         block(
-        write(storedInput, Reg(1)),
-        read(Reg(1), printedInt),
+          read(Reg.input1, printedInt),
         A4.printIntegerCode,
-          read(Reg(1), storedInput)
-        )
+          block()
       )
     procedure
   }
@@ -55,10 +52,13 @@ object A5 {
     val procedure = new Procedure("printArray", Seq(arrayAddress, numOfElements))
     procedure.code = 
       Scope(Seq(i),block(
-        assign(i,Assembler.ADD(Reg.zero,Reg.zero,Reg.zero)),
+        assign(i,Assembler.ADD(Reg.result,Reg.zero,Reg.zero)),
         whileLoop(read(Reg.result, i),ltCmp, read(Reg.result, numOfElements),
-          Call(printProcedure,Seq(read(Reg.result,i )), false)
-        )
+          block(
+          Call(printProcedure,Seq(deref(binOp(read(Reg.result, arrayAddress), plus,
+            binOp(read(Reg.result, i), times, const(4))))), false),
+          assign(i, binOp(read(Reg.result, i), plus, const(1)))
+          ))
       ))
     procedure
   }
@@ -108,19 +108,19 @@ object A5 {
     *
     * This example tree has height 3.
     */
-  
+
   def const(i:Int):Code={
   block(
-    Assembler.LIS(Reg(3)), 
+    Assembler.LIS(Reg(3)),
     (Word(encodeSigned(i)))
   )
-  
+
   }
   def getArrayIndex(array:Variable,i:Variable):Code={
              deref(binOp(read(Reg.result, array), plus, binOp(const(4),times, read(Reg.result, i))))
   }
   def getLeft(array:Variable,i:Variable):Code={
-    
+
       deref(binOp(read(Reg.result, array),plus,
         binOp(const(4), times,
           binOp(read(Reg.result,i), plus, const(1))
@@ -134,7 +134,7 @@ object A5 {
       )
     ))
   }
-  
+
   lazy val treeHeight: Seq[Procedure] = {
     val array = new Variable("array")
     val length = new Variable("length")
@@ -149,45 +149,45 @@ object A5 {
     val right = new Variable("right");
     val evaluatedLeft = new Variable("evaluatedLeft");
     val evaluatedRight = new Variable("evaluatedRight")
-    
+
     treeHeight.code = block(
         Call(recurseTree,Seq(
           read(Reg.result, array),
-          read(Reg.result, length), 
-          ADD(Reg.result, Reg.zero, Reg.zero) )
+          read(Reg.result, length),
+          ADD(Reg.result, Reg.zero, Reg.zero))
         )
     )
     recurseTree.code=
-      Scope(Seq(left, right, evaluatedLeft),
+      Scope(Seq(left, right, evaluatedLeft, evaluatedRight),
         block(
-          ifStmt(getArrayIndex(array,node),eqCmp,const(-1),
+          ifStmt(read(Reg.result, node),eqCmp,const(-1),// node is the index of a node, -1 means no node.
             ADD(Reg.result, Reg.zero, Reg.zero),
             block(
-              
+
                 assign(left, getLeft(recurseArray, node)),
                 assign(right, getRight(recurseArray, node)),
                 Call(recurseTree, Seq(read(Reg.result, recurseArray),
                                       read(Reg.result, recurseLength),
-                                      binOp(read(Reg.result, node), plus, const(1))),false),
+                                      read(Reg.result, left)),false),
               write(evaluatedLeft,Reg.result),
                Call(recurseTree, Seq(read(Reg.result, recurseArray),
                 read(Reg.result, recurseLength),
-                binOp(read(Reg.result, node), plus, const(2))),false),
+                read(Reg.result, right)),false),
               write(evaluatedRight, Reg.result),
               ifStmt(read(Reg.result,evaluatedLeft),gtCmp, read(Reg.result, evaluatedRight),
                 binOp(read(Reg.result, evaluatedLeft), plus, const(1)),
                 binOp(read(Reg.result, evaluatedRight), plus, const(1))),
               )
-               
+
             )
         )
       )
-      
-      
-      
-      
-      
-      
+
+
+
+
+
+
     /* You may, but are not required to, define and use more procedures in addition to `treeHeight`.
      * `treeHeight` must be the first procedure in the sequence that is returned.
      */

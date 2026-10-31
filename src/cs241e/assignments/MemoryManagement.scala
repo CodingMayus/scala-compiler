@@ -148,13 +148,17 @@ object MemoryManagement {
       * already listed in Reg.scala.
       */
     // Stackpointer should be pointing to the
-    def allocate(chunk: Chunk): Code = block(
+    def allocate(chunk: Chunk): Code = {
+
+      block(
       LIS(Reg.scratch),
-      CodeWord(Word(encodeUnsigned(chunk.bytes))),
+     Word(encodeUnsigned(chunk.bytes)),
       SUB(Reg.stackPointer, Reg.stackPointer, Reg.scratch),
       ADD(Reg.result, Reg(0), Reg.stackPointer),
       chunk.initialize
     )
+    }
+
     /** Generate the code to deallocate the space for the `Chunk` that is at the top of the stack. To determine
       * the size of this `Chunk`, takes advantage of the convention that word 0 of each `Chunk` stores its size
       * in bytes.

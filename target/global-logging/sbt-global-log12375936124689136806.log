@@ -1,0 +1,142 @@
+[debug] > Exec(early(addDefaultCommands), None, None)
+[debug] > Exec(addDefaultCommands, None, None)
+[debug] > Exec(early(initialize), None, None)
+[debug] > Exec(initialize, None, None)
+[debug] > Exec(boot, None, None)
+[debug] > Exec(writeSbtVersion, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.11.4 (Oracle Corporation Java 27)
+[debug]       Load.loadUnit: plugins took 16.884625ms
+[debug]       Load.loadUnit: defsScala took 0.052084ms
+[debug] [Loading] Scanning directory /Users/matthewyu/.sbt/1.0/plugins
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /Users/matthewyu/.sbt/1.0/plugins, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 3.858375 ms
+[debug]           Load.resolveProject(global-plugins) took 9.39325ms
+[debug]         Load.loadTransitive: finalizeProject(Project(id global-plugins, base: /Users/matthewyu/.sbt/1.0/plugins, plugins: List(<none>))) took 18.628083ms
+[debug] [Loading] Done in /Users/matthewyu/.sbt/1.0/plugins, returning: (global-plugins)
+[debug]       Load.loadUnit: loadedProjectsRaw took 23.337459ms
+[debug]       Load.loadUnit: cleanEvalClasses took 0.04725ms
+[debug]     Load.loadUnit(file:/Users/matthewyu/.sbt/1.0/plugins/, ...) took 42.013084ms
+[debug]   Load.apply: load took 282.590875ms
+[debug]   Load.apply: resolveProjects took 1.619042ms
+[debug]   Load.apply: finalTransforms took 15.727209ms
+[debug]   Load.apply: config.delegates took 1.644166ms
+[debug]   Load.apply: Def.make(settings)... took 102.983125ms
+[debug]   Load.apply: structureIndex took 27.337167ms
+[debug]   Load.apply: mkStreams took 0.383583ms
+[info] loading global plugins from /Users/matthewyu/.sbt/1.0/plugins
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug] Load.defaultLoad until apply took 750.494959ms
+[debug]           Load.loadUnit: plugins took 3.690334ms
+[debug]           Load.loadUnit: defsScala took 0.001083ms
+[debug] [Loading] Scanning directory /Users/matthewyu/Downloads/cs241e/project
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /Users/matthewyu/Downloads/cs241e/project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 0.57225 ms
+[debug]               Load.resolveProject(cs241e-build) took 0.384334ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id cs241e-build, base: /Users/matthewyu/Downloads/cs241e/project, plugins: List(<none>))) took 1.1195ms
+[debug] [Loading] Done in /Users/matthewyu/Downloads/cs241e/project, returning: (cs241e-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 1.606584ms
+[debug]           Load.loadUnit: cleanEvalClasses took 0.003583ms
+[debug]         Load.loadUnit(file:/Users/matthewyu/Downloads/cs241e/project/, ...) took 5.471083ms
+[debug]       Load.apply: load took 5.804667ms
+[debug]       Load.apply: resolveProjects took 0.0355ms
+[debug]       Load.apply: finalTransforms took 4.21325ms
+[debug]       Load.apply: config.delegates took 0.104833ms
+[debug]       Load.apply: Def.make(settings)... took 31.100458ms
+[debug]       Load.apply: structureIndex took 11.66525ms
+[debug]       Load.apply: mkStreams took 0.001541ms
+[info] loading project definition from /Users/matthewyu/Downloads/cs241e/project
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug]     Load.loadUnit: plugins took 99.451625ms
+[debug]     Load.loadUnit: defsScala took 8.75E-4ms
+[debug] [Loading] Scanning directory /Users/matthewyu/Downloads/cs241e
+[debug]       Load.loadUnit: mkEval took 1.51775ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /Users/matthewyu/Downloads/cs241e, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 0.447667 ms
+[info] loading settings for project cs241e from build.sbt...
+[debug]         Load.resolveProject(cs241e) took 0.576125ms
+[debug]       Load.loadTransitive: finalizeProject(Project(id cs241e, base: /Users/matthewyu/Downloads/cs241e, plugins: List(<none>))) took 1.170625ms
+[debug] [Loading] Done in /Users/matthewyu/Downloads/cs241e, returning: (cs241e)
+[debug]     Load.loadUnit: loadedProjectsRaw took 46.311708ms
+[debug]     Load.loadUnit: cleanEvalClasses took 1.230208ms
+[debug]   Load.loadUnit(file:/Users/matthewyu/Downloads/cs241e/, ...) took 147.216791ms
+[debug] Load.apply: load took 147.653292ms
+[debug] Load.apply: resolveProjects took 0.034667ms
+[debug] Load.apply: finalTransforms took 2.1845ms
+[debug] Load.apply: config.delegates took 0.091583ms
+[debug] Load.apply: Def.make(settings)... took 21.137708ms
+[debug] Load.apply: structureIndex took 7.671917ms
+[debug] Load.apply: mkStreams took 0.001375ms
+[info] set current project to cs241e (in build file:/Users/matthewyu/Downloads/cs241e/)
+[debug] > Exec(sbtPopOnFailure, None, None)
+[debug] > Exec(resumeFromFailure, None, None)
+[debug] > Exec(notifyUsersAboutShell, None, None)
+[debug] > Exec(iflast shell, None, None)
+[debug] > Exec(testOnly A5Tests, None, None)
+[debug] Evaluating tasks: Test / testOnly
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 5 Scala sources to /Users/matthewyu/Downloads/cs241e/target/scala-3.3.6/test-classes ...
+[warn] -- Warning: /Users/matthewyu/Downloads/cs241e/test/src/A1Tests.scala:65:2 ------
+[warn] 65 |  for ( i <- -4 to 3){
+[warn]    |  ^
+[warn]    |  Line is indented too far to the left, or a `}` is missing
+[warn] -- Warning: /Users/matthewyu/Downloads/cs241e/test/src/A2Tests.scala:1:0 -------
+[warn] 1 |import cs241e.assignments.{A1, Assembler}
+[warn]   |^
+[warn]   |No class, trait or object is defined in the compilation unit.
+[warn]   |The incremental compiler cannot record the dependency information in such case.
+[warn]   |Some errors like unused import referring to a non-existent class might not be reported.
+[warn] 2 |import cs241e.assignments.A2.*;
+[warn] 3 |import cs241e.mips.State.*
+[warn] 4 |import cs241e.mips.{Bits, Word}
+[warn] 5 |import org.scalatest.funsuite.AnyFunSuite
+[warn] 6 |import cs241e.assignments.ProgramRepresentation;
+[warn] 7 |import cs241e.mips.*;
+[warn] 8 |import cs241e.assignments.Assembler.*;
+[warn] two warnings found
+[info] done compiling

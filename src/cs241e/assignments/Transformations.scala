@@ -414,97 +414,105 @@ object Transformations {
     def compileProcedure(currentProcedure: Procedure): Code = {
 
       /** Eliminate all `Call`s from a tree of `Code` by translating them to simpler pieces
-        * of `Code`.
-        *
-        * The general strategy for passing arguments is as follows:
-        * - create temporary variables, one for each argument
-        * - evaluate the arguments, storing them in the temporary variables
-        * - allocate memory for the parameter `Chunk`
-        * - copy the values of the temporary variables to the parameter `Chunk`
-        *
-        * Assumes that the input `code` tree does not contain any `Code`
-        * types that are defined after `Call` in `ProgramRepresentation.scala`.
-        */
+       * of `Code`.
+       *
+       * The general strategy for passing arguments is as follows:
+       * - create temporary variables, one for each argument
+       * - evaluate the arguments, storing them in the temporary variables
+       * - allocate memory for the parameter `Chunk`
+       * - copy the values of the temporary variables to the parameter `Chunk`
+       *
+       * Assumes that the input `code` tree does not contain any `Code`
+       * types that are defined after `Call` in `ProgramRepresentation.scala`.
+       */
       def eliminateCalls(code: Code): Code = {
         def fun: PartialFunction[Code, Code] = {
           case call: Call =>
-            
+
             // Note: `caller` does not need to be used in the solution for `eliminateCalls`.
             // It is made explicit here only to distinguish it from `callee`.
             val caller = currentProcedure
             val callee = call.procedure
             val args = call.arguments
-            val params = callee.parameters
+            val params = paramChunks(callee).variables //callee's parameters
             val tempVars = createTempVars(params)
-            val evaluatedArgs:Code= Block((tempVars.zip(args)).map((tempVar, arg)=>block(arg,
-              write(tempVar,Reg.result))))
-            val storeEvaluatedArgs:Code = Block(params.map(
-              param=>block(paramChunks(currentProcedure).load(Reg.result, Reg.scratch,param),
-                paramChunks(currentProcedure).store(
-                Reg.result,param, Reg.scratch))
-              ))
+            val evaluatedArgs: Code = Block((tempVars.zip(args)).map((tempVar, arg) => block(arg,
+              write(tempVar, Reg.result))))
+            val storeEvaluatedArgs: Code = Block((tempVars.zip(params).map(
+              (tempVar, param)=> block(
+                      read(Reg.scratch, tempVar),
+                paramChunks(callee).store(Reg.result, param, Reg.scratch)
+              )
+            )))
+
             Scope(tempVars, block(
               evaluatedArgs,
-              Stack.allocate(paramChunks(currentProcedure)),
+              Comment("urmom"),
+              Stack.allocate(paramChunks(callee)),
               storeEvaluatedArgs,
               LIS(Reg.targetPC),
-              Use(currentProcedure.label),
+              Use(callee.label),
               JALR(Reg.targetPC)
             ))
         }
+
         transformCode(code, fun)
       }
-
       /* First part of main body of compileProcedure. */
+      //println("before changes:")
+      //disassemblingCodePrinter.pprintln(currentProcedure.code)
       val code1 = eliminateCalls(currentProcedure.code)
+      //println("code1:")
+      //disassemblingCodePrinter.pprintln(code1)
       val code2 = eliminateIfStmts(code1)
+      //println("code2:")
+      //disassemblingCodePrinter.pprintln(code2)
       val (code3, variables) = eliminateScopes(code2)
+     // println("code3:")
+     // disassemblingCodePrinter.pprintln(code3)
       assert(variables.distinct == variables)
 
 
 
-      var paramPtr = new Variable("paramPtr")
-      var dynamicLink = new Variable("dynamicLink")
-      var savedPC = new Variable("savedPC")
-      val frame = Chunk(variables++Seq(paramPtr, dynamicLink, savedPC))
+      val frame = Chunk(variables ++ Seq(currentProcedure.paramPtr, currentProcedure.dynamicLink, currentProcedure.savedPC))
 
       /** Adds a prologue and epilogue to the `code` of a procedure.
-        *
-        * The prologue assumes that when the procedure is called, `Reg.result` contains the address
-        * of the parameter chunk for the procedure.
-        *
-        * The prologue:
-        * - saves the address of the parameter chunk in order to later store it into the `paramPtr` variable
-        *   in the procedure `frame`
-        * - allocates space for the procedure `frame` on the stack
-        * - saves the caller's value of `Reg.framePointer` in the `dynamicLink` variable of the procedure `frame`
-        * - sets `Reg.framePointer` to the address of the newly-allocated `frame` for the callee
-        * - saves `Reg.link` in the `savedPC` variable of the `frame`
-        * - stores the saved address of the parameter chunk into the `paramPtr` variable in the procedure `frame`
-        *
-        * The epilogue:
-        * - restores `Reg.link` and `Reg.framePointer` from the current frame
-        * - pops the callee's parameter chunk and `frame` off the stack
-        * - returns control to the caller
-        *
-        * Warning: this method transforms code after `eliminateVarAccesses` has been called. Therefore, this method
-        * should not introduce any new `VarAccess`es into the code (by calling `read` or `write`).
-        *
-        * Hint: this method can use the `frame` from its enclosing method `compileProcedure`.
-        */
+       *
+       * The prologue assumes that when the procedure is called, `Reg.result` contains the address
+       * of the parameter chunk for the procedure.
+       *
+       * The prologue:
+       * - saves the address of the parameter chunk in order to later store it into the `paramPtr` variable
+       *   in the procedure `frame`
+       * - allocates space for the procedure `frame` on the stack
+       * - saves the caller's value of `Reg.framePointer` in the `dynamicLink` variable of the procedure `frame`
+       * - sets `Reg.framePointer` to the address of the newly-allocated `frame` for the callee
+       * - saves `Reg.link` in the `savedPC` variable of the `frame`
+       * - stores the saved address of the parameter chunk into the `paramPtr` variable in the procedure `frame`
+       *
+       * The epilogue:
+       * - restores `Reg.link` and `Reg.framePointer` from the current frame
+       * - pops the callee's parameter chunk and `frame` off the stack
+       * - returns control to the caller
+       *
+       * Warning: this method transforms code after `eliminateVarAccesses` has been called. Therefore, this method
+       * should not introduce any new `VarAccess`es into the code (by calling `read` or `write`).
+       *
+       * Hint: this method can use the `frame` from its enclosing method `compileProcedure`.
+       */
       def addEntryExit(code: Code): Code = {
 
         val enter = block(
           ADD(Reg.savedParamPtr, Reg.result, Reg.zero),
           Stack.allocate(frame), // returns stack pointer but which we can treat as a frame pointer here.
-          frame.store(Reg.result, dynamicLink, Reg.framePointer ),
+          frame.store(Reg.result, currentProcedure.dynamicLink, Reg.framePointer),
           ADD(Reg.framePointer, Reg.result, Reg.zero),
-          frame.store(Reg.framePointer, savedPC,Reg.link),
-          frame.store(Reg.framePointer, paramPtr, Reg.savedParamPtr)
+          frame.store(Reg.framePointer, currentProcedure.savedPC, Reg.link),
+          frame.store(Reg.framePointer, currentProcedure.paramPtr, Reg.savedParamPtr)
         )
         val exit = block(
-          frame.load(Reg.framePointer,Reg.link, savedPC),
-          frame.load(Reg.framePointer, Reg.framePointer, dynamicLink),
+          frame.load(Reg.framePointer, Reg.link, currentProcedure.savedPC),
+          frame.load(Reg.framePointer, Reg.framePointer, currentProcedure.dynamicLink),
           Stack.pop,
           Stack.pop,
           JR(Reg.link)
@@ -513,33 +521,53 @@ object Transformations {
       }
 
       /** Eliminate all `VarAccess`es from a tree of `Code` by replacing them with machine language code for
-        * reading or writing the relevant variable.
-        *
-        * In contrast to Assignment 3, this method needs to handle accesses not only to variables,
-        * but also to the parameters of the current procedure.
-        *
-        * Assumes that the input sequence does not contain any `Code`
-        * types that are defined after `VarAccess` in `ProgramRepresentation.scala`.
-        *
-        * The code generated to implement a variable access may modify the value of Reg.scratch.
-        * If the access is a read, it may also of course modify the target register. If you need more
-        * than these registers, you may add new scratch registers to Reg.scala. The generated code must
-        * not modify the values of any other registers that are already listed in Reg.scala.
-        *
-        * Hint: this method can use the `frame` from its enclosing procedure `compileProcedure`.
-        */
+       * reading or writing the relevant variable.
+       *
+       * In contrast to Assignment 3, this method needs to handle accesses not only to variables,
+       * but also to the parameters of the current procedure.
+       *
+       * Assumes that the input sequence does not contain any `Code`
+       * types that are defined after `VarAccess` in `ProgramRepresentation.scala`.
+       *
+       * The code generated to implement a variable access may modify the value of Reg.scratch.
+       * If the access is a read, it may also of course modify the target register. If you need more
+       * than these registers, you may add new scratch registers to Reg.scala. The generated code must
+       * not modify the values of any other registers that are already listed in Reg.scala.
+       *
+       * Hint: this method can use the `frame` from its enclosing procedure `compileProcedure`.
+       */
       def eliminateVarAccessesA5(code: Code): Code = {
-        def fun: PartialFunction[Code, Code] ={
-          case variable:VarAccess=> {
-              if(variable.read){
-                variable.
-                frame.load(Reg.framePointer, variable.register,variable.variable);
-              }else{
-                
-                frame.store(Reg.framePointer,variable.variable,variable.register)
+        def fun: PartialFunction[Code, Code] = {
+          case va: VarAccess => {
+            if (va.read) {
+
+              if (frame.variables.contains(va.variable)) {
+
+                frame.load(Reg.framePointer, va.register, va.variable)
+
+              } else if (currentProcedure.parameters.contains(va.variable)) {
+
+
+                 block(
+                  frame.load(Reg.framePointer, Reg.scratch, currentProcedure.paramPtr),
+                  paramChunks(currentProcedure).load(Reg.scratch, va.register, va.variable)
+                )
+              }else {
+                block()
               }
-            block()
-        
+            }
+            else {
+              if (frame.variables.contains(va.variable)) {
+                frame.store(Reg.framePointer, va.variable, va.register);
+              } else if (currentProcedure.parameters.contains(va.variable)) {
+                block(
+                  frame.load(Reg.framePointer, Reg.scratch, currentProcedure.paramPtr),
+                  paramChunks(currentProcedure).store(Reg.scratch, va.variable,va.register)
+                )
+              }else {
+                block()
+              }
+            }
           }
         }
 
@@ -547,8 +575,14 @@ object Transformations {
       }
 
       /* Rest of main body of compileProcedure. */
-
+      println("varaibles")
+      print(paramChunks(currentProcedure))
       val code4 = eliminateVarAccessesA5(code3)
+      println("before changes:")
+      disassemblingCodePrinter.pprintln(code3)
+      println("eliminatingvaraccessesa5:")
+      disassemblingCodePrinter.pprintln(code4)
+
       addEntryExit(code4)
     }
 
@@ -558,7 +592,7 @@ object Transformations {
       Stack.allocate(Chunk(procedures.head.parameters)), // allocate parameter chunk for start procedure
       Block(procedures.map(compileProcedure))
     )
-    toMachineCode(code)
+      toMachineCode(code)
   }
 
   def startProcedure(mainProcedure: Procedure): Procedure = {

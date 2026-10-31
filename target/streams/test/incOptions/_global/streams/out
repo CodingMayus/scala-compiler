@@ -1,2 +1,29 @@
 [debug] Created transactional ClassFileManager with tempDir = /Users/matthewyu/Downloads/cs241e/target/scala-3.3.6/test-classes.bak
+[debug] About to delete class files:
+[debug] 	A4Tests.class
+[debug] 	A3Tests.class
+[debug] 	A1Tests.class
+[debug] 	A4Tests.tasty
+[debug] 	A3Tests.tasty
+[debug] 	A1Tests.tasty
+[debug] We backup class files:
+[debug] 	A4Tests.class
+[debug] 	A3Tests.class
+[debug] 	A1Tests.class
+[debug] 	A4Tests.tasty
+[debug] 	A3Tests.tasty
+[debug] 	A1Tests.tasty
+[debug] Registering generated classes:
+[debug] 	A5Tests$T$.class
+[debug] 	A4Tests.class
+[debug] 	A5Tests.class
+[debug] 	A5Tests$T.class
+[debug] 	A3Tests.class
+[debug] 	A1Tests.class
+[debug] 	A5Tests$T$.tasty
+[debug] 	A4Tests.tasty
+[debug] 	A5Tests.tasty
+[debug] 	A5Tests$T.tasty
+[debug] 	A3Tests.tasty
+[debug] 	A1Tests.tasty
 [debug] Removing the temporary directory used for backing up class files: /Users/matthewyu/Downloads/cs241e/target/scala-3.3.6/test-classes.bak

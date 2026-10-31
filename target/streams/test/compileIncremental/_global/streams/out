@@ -1,6 +1,31 @@
 [debug] [zinc] IncrementalCompile -----------
 [debug] IncrementalCompile.incrementalCompile
 [debug] previous = Stamps for: 3 products, 4 sources, 8 libraries
-[debug] current source = Set(${BASE}/test/src/A1Tests.scala, ${BASE}/test/src/A4Tests.scala, ${BASE}/test/src/A3Tests.scala, ${BASE}/test/src/A2Tests.scala)
-[debug] > initialChanges = InitialChanges(Changes(added = Set(), removed = Set(), changed = Set(), unmodified = ...),Set(),Set(),API Changes: Set())
-[debug] No changes
+[debug] current source = Set(${BASE}/test/src/A2Tests.scala, ${BASE}/test/src/A3Tests.scala, ${BASE}/test/src/A4Tests.scala, ${BASE}/test/src/A1Tests.scala, ${BASE}/test/src/A5Tests.scala)
+[debug] > initialChanges = InitialChanges(Changes(added = Set(${BASE}/test/src/A5Tests.scala), removed = Set(), changed = Set(), unmodified = ...),Set(${BASE}/target/scala-3.3.6/test-classes/A1Tests.class, ${BASE}/target/scala-3.3.6/test-classes/A3Tests.class, ${BASE}/target/scala-3.3.6/test-classes/A4Tests.class),Set(),API Changes: Set())
+[debug] 
+[debug] Initial source changes:
+[debug] 	removed: Set()
+[debug] 	added: Set(${BASE}/test/src/A5Tests.scala)
+[debug] 	modified: Set()
+[debug] Invalidated products: Set(${BASE}/target/scala-3.3.6/test-classes/A1Tests.class, ${BASE}/target/scala-3.3.6/test-classes/A3Tests.class, ${BASE}/target/scala-3.3.6/test-classes/A4Tests.class)
+[debug] External API changes: API Changes: Set()
+[debug] Modified binary dependencies: Set()
+[debug] Initial directly invalidated classes: Set()
+[debug] Sources indirectly invalidated by:
+[debug] 	product: Set(${BASE}/test/src/A1Tests.scala, ${BASE}/test/src/A3Tests.scala, ${BASE}/test/src/A4Tests.scala)
+[debug] 	binary dep: Set()
+[debug] 	external source: Set()
+[debug] All initially invalidated classes: Set()
+[debug] All initially invalidated sources:Set(${BASE}/test/src/A5Tests.scala, ${BASE}/test/src/A1Tests.scala, ${BASE}/test/src/A3Tests.scala, ${BASE}/test/src/A4Tests.scala)
+[debug] Initial set of included nodes: 
+[debug] Recompiling all sources: number of invalidated sources > 50.0 percent of all sources
+[debug] compilation cycle 1
+[info] compiling 5 Scala sources to /Users/matthewyu/Downloads/cs241e/target/scala-3.3.6/test-classes ...
+[debug] Returning already retrieved and compiled bridge: /Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-sbt-bridge/3.3.6/scala3-sbt-bridge-3.3.6.jar.
+[debug] [zinc] Running cached compiler 1748b073 for Scala Compiler version 3.3.6
+[debug] [zinc] The Scala compiler is invoked with:
+[debug] 	-classpath
+[debug] 	/Users/matthewyu/Downloads/cs241e/target/scala-3.3.6/test-classes:/Users/matthewyu/Downloads/cs241e/target/scala-3.3.6/classes:/Users/matthewyu/Downloads/cs241e/lib/cs241e-library.jar:/Users/matthewyu/Downloads/cs241e/lib/cs241e-library-sources.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.6/scala3-library_3-3.3.6.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest_3/3.2.19/scalatest_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/pprint_3/0.9.3/pprint_3-0.9.3.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.16/scala-library-2.13.16.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-core_3/3.2.19/scalatest-core_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-featurespec_3/3.2.19/scalatest-featurespec_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-flatspec_3/3.2.19/scalatest-flatspec_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-freespec_3/3.2.19/scalatest-freespec_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-funsuite_3/3.2.19/scalatest-funsuite_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-funspec_3/3.2.19/scalatest-funspec_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-propspec_3/3.2.19/scalatest-propspec_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-refspec_3/3.2.19/scalatest-refspec_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-wordspec_3/3.2.19/scalatest-wordspec_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-diagrams_3/3.2.19/scalatest-diagrams_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-matchers-core_3/3.2.19/scalatest-matchers-core_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-shouldmatchers_3/3.2.19/scalatest-shouldmatchers_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-mustmatchers_3/3.2.19/scalatest-mustmatchers_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/fansi_3/0.5.1/fansi_3-0.5.1.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/sourcecode_3/0.4.3-M5/sourcecode_3-0.4.3-M5.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalactic/scalactic_3/3.2.19/scalactic_3-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalatest/scalatest-compatible/3.2.19/scalatest-compatible-3.2.19.jar:/Users/matthewyu/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/modules/scala-xml_3/2.1.0/scala-xml_3-2.1.0.jar
+[debug] Scala compilation took 1.979994125 s
+[info] done compiling

@@ -124,3 +124,5 @@ val eliminated: Code = eliminateVarAccessesA3(code, Chunk(Seq(var1, var2)))
 
 println(eliminated)
 // val compiled = compilerA3(code, Seq(var1, var2))
+
+print(SUB(Reg.))

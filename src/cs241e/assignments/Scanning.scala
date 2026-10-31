@@ -19,7 +19,10 @@ import cs241e.scanparse.DFAs.*
 /** Implementations of a DFA recognizer and a scanner. */
 object Scanning {
   /** Given a DFA and an input string, determines whether the input string is in the language specified by the DFA. */
-  def recognize(dfa: DFA, input: List[Char]): Boolean = ???
+  def recognize(dfa: DFA, input: List[Char]): Boolean = {
+    
+    
+  }
 
 
 
