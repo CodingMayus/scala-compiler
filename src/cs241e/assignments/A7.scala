@@ -128,18 +128,51 @@ object A7 {
     */
   lazy val abc = DFA(
     alphabet = "abc".toSet,
-    states = ???,
-    start = ???,
-    accepting = ???,
-    transition = ???
+    states = Set("start", "a", "ab", "abc"),
+    start = "start",
+    accepting = Set("abc"),
+    transition = {
+        case("start",'a')=>"a"
+        case("start", 'b')=>"start"
+        case("start", 'c')=>"start"
+        
+        case("a", 'a')=>"a"
+        case("a", 'b')=>"ab"
+        case("a", 'c')=>"a"
+        
+        case("ab", 'a')=>"ab"
+        case("ab", 'b')=>"ab"
+        case("ab", 'c')=>"abc"
+        
+        case("abc", 'a')=>"abc"
+        case("abc", 'b')=>"abc"
+        case("abc",'c')=>"abc"
+    }
   )
 
   /** A DFA that recognizes any string from the alphabet {a,b,c} containing abc as a substring. */
   lazy val abcSubstring = DFA(
     alphabet = "abc".toSet,
-    states = ???,
-    start = ???,
-    accepting = ???,
-    transition = ???
+    states = Set("start","a", "ab", "abc"),
+    start = "start",
+    accepting =Set("abc"),
+    transition = {
+      case("start", 'a')=>"a"
+      
+      case ("start", 'b') =>"start"
+      case ("start", 'c')=>"start"
+        
+        case("a", 'a')=>"start"
+        case("a", 'b')=>"ab"
+        case("a", 'c')=>"start"
+        
+        case("ab", 'a')=>"start"
+        case("ab", 'b')=>"start"
+        case("ab", 'c')=>"abc"
+        
+        case("abc",'a')=>"abc"
+        case("abc", 'b')=>"abc"
+        case("abc",'c')=> "abc"
+    }
   )
 }
