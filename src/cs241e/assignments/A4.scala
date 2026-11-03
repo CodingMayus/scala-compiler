@@ -179,14 +179,14 @@ object A4 {
    * -2^31 (whose negation is itself as a bit pattern) is still read correctly as 2^31.
    * Find the largest power of ten `p` with n / p <= 9, then print (n / p) % 10 for p = p, p/10, ..., 1.
    */
-  //modified for A5, input is now in register 3.
+
   lazy val printIntegerCode: Code = {
     val n = new Variable("n")
     val p = new Variable("p")
     Scope(Seq(n, p), block(
       write(n, Reg.input1),
       ifStmt(read(Reg.result, n), ltCmp, const(0), block(
-        printChar(const(45)), // '-'
+        printChar(const(45)), // '
         assign(n, binOp(const(0), minus, read(Reg.result, n)))
       )),
       assign(p, const(1)),

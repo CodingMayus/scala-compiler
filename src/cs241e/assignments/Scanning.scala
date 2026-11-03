@@ -20,8 +20,22 @@ import cs241e.scanparse.DFAs.*
 object Scanning {
   /** Given a DFA and an input string, determines whether the input string is in the language specified by the DFA. */
   def recognize(dfa: DFA, input: List[Char]): Boolean = {
-    
-    
+      var currentState = dfa.start;
+      for bit <- input do{
+          if(dfa.transition.isDefinedAt(currentState, bit)){
+        currentState = dfa.transition(currentState, bit)
+          }else{
+         return false;
+          }
+    }
+
+
+    if(dfa.accepting.contains(currentState)){
+         true;
+      }else{
+         false;
+      }
+
   }
 
 

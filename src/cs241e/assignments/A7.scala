@@ -44,7 +44,7 @@ object A7 {
         case("1Mod",'0')=>"2Mod"
         case("1Mod", '1')=>"0Mod"
         case("2Mod", '0')=>"1Mod"
-        case("2Mod", '1')=>"0Mod"
+        case("2Mod", '1')=>"2Mod"
     })
 
   /** A DFA with alphabet {0,1} that recognizes binary integers that have no useless (leading) zeroes
@@ -63,6 +63,7 @@ object A7 {
     start = "start",
     accepting = Set("2mod3 1mod2",
                     "1mod3 1mod2"),
+    
     transition = {
         case("start", '0')=>"0"
         case("start",'1')=>"1mod3 1mod2"
@@ -71,9 +72,13 @@ object A7 {
         case("1mod3 1mod2", '0')=>"2mod3 0mod2"
         case("1mod3 1mod2", '1')=>"0mod3 1mod2"
         case("2mod3 0mod2",'0')=>"1mod3 0mod2"
-        case("2mod3 0mod2", '1')=>"1mod3 1mod2"
+        case("2mod3 0mod2", '1')=>"2mod3 1mod2"
+        case("2mod3 1mod2", '0')=>"1mod3 0mod2"
+        case("2mod3 1mod2", '1')=>"2mod3 1mod2"
         case("0mod3 1mod2", '0')=>"0mod3 0mod2"
         case("0mod3 1mod2", '1')=>"1mod3 1mod2"
+        case("1mod3 0mod2",'0')=>"2mod3 0mod2"
+        case ("1mod3 0mod2", '1') => "0mod3 1mod2"
     }
   )
 
@@ -87,38 +92,52 @@ object A7 {
                "0",
                 "oneFirst",
                 "otherFirst",
-                  "second",
+                  "oneSecond",
+              "oneSecond2",
+                  "otherSecond",
                 "third",
                 "negative",
                 "oneFirstNegative",
                 "otherFirstNegative",
-                "secondNegative",
+                "oneSecondNegative",
+              "oneSecondNegative2",
+                "otherSecondNegative",
                  "thirdNegative"),
     start ="start",
-      accepting = Set("0", "oneFirst", "otherFirst", "second", "third", "oneFirstNegative",
-      "otherFirstNegative", "secondNegative", "thirdNegative"),
+      accepting = Set("0", "oneFirst", "otherFirst", "oneSecond","otherSecond", "third", "oneFirstNegative",
+      "otherFirstNegative", "oneSecondNegative","oneSecondNegative2","otherSecondNegative", "thirdNegative","oneSecond2"),
     transition = {
       case("start",'0')=>"0"
       case("start", '-')=>"negative"
       case("start", '1')=>"oneFirst"
-      
-        case("negative", '0')=>"0"
+
+//        case("negative", '0')=>"0"
         case("negative",'1')=> "oneFirstNegative"
         case("negative", c) if c>='2' && c<='9' => "otherFirstNegative"
-        
-        case("oneFirstNegative",c)if c>='0' && c<='2' => "secondNegative"
-      
-        case("otherFirstNegative",c ) if c>='0' && c<='9' => "secondNegative"
-        
-        case("secondNegative",c) if c>='0' && c <='8'=> "thirdNegative"
-      
-        case("start", c) if c>='2' && c<='9'=> "otherFirst"
-        
-        case("oneFirst", c) if c>='0' && c<='2' => "second"
-         
-        case("otherFirst", c) if c>='0' && c<='9' => "second"
 
-        case("second",c) if c>='0' && c<='7' => "second"
+      case("oneFirstNegative",'2') => "oneSecondNegative2"
+        case("oneFirstNegative",c)if c>='0' && c<'2' => "oneSecondNegative"
+        case("oneFirstNegative",c)if c>='2' && c<='9' => "otherSecondNegative"
+
+
+      case("otherFirstNegative",c ) if c>='0' && c<='9' => "otherSecondNegative"
+
+        case("oneSecondNegative",c) if c>='0' && c <='9'=> "thirdNegative"
+      case("oneSecondNegative2",c) if  c>='0' && c<='8'=> "thirdNegative"
+
+
+      case("start", c) if c>='2' && c<='9'=> "otherFirst"
+
+      
+        case("oneFirst", '2') =>"oneSecond2"
+        case("oneFirst", c) if c>='0' && c<'2' => "oneSecond"
+
+        case("oneFirst", c) if c>='3' && c<='9' => "otherSecond"
+
+
+      case("otherFirst", c) if c>='0' && c<='9' => "otherSecond"
+        case("oneSecond2",c) if c>='0' && c<='7'=>"third"
+        case("oneSecond",c) if c>='0' && c<='9' => "third"
     }
   )
 
@@ -135,15 +154,15 @@ object A7 {
         case("start",'a')=>"a"
         case("start", 'b')=>"start"
         case("start", 'c')=>"start"
-        
+
         case("a", 'a')=>"a"
         case("a", 'b')=>"ab"
         case("a", 'c')=>"a"
-        
+
         case("ab", 'a')=>"ab"
         case("ab", 'b')=>"ab"
         case("ab", 'c')=>"abc"
-        
+
         case("abc", 'a')=>"abc"
         case("abc", 'b')=>"abc"
         case("abc",'c')=>"abc"
@@ -158,18 +177,17 @@ object A7 {
     accepting =Set("abc"),
     transition = {
       case("start", 'a')=>"a"
-      
       case ("start", 'b') =>"start"
       case ("start", 'c')=>"start"
-        
-        case("a", 'a')=>"start"
+
+        case("a", 'a')=>"a"
         case("a", 'b')=>"ab"
         case("a", 'c')=>"start"
-        
-        case("ab", 'a')=>"start"
+
+        case("ab", 'a')=>"a"
         case("ab", 'b')=>"start"
         case("ab", 'c')=>"abc"
-        
+
         case("abc",'a')=>"abc"
         case("abc", 'b')=>"abc"
         case("abc",'c')=> "abc"

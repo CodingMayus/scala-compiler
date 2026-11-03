@@ -28,7 +28,6 @@ object A5 {
       // You may add code here before and/or after `A4.printIntegerCode`. If you do not want any
       // code before or after, replace the ??? with an empty `block()`.
       
-
         block(
           read(Reg.input1, printedInt),
         A4.printIntegerCode,
