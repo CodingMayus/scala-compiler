@@ -627,7 +627,7 @@ object Transformations {
     val procedures = startProcedure(inputProcedures.head) +: inputProcedures
 
     /** The `Chunk` to store the parameters and static link of each procedure. */
-    val paramChunks: Map[Procedure, Chunk] = makeMap(procedures, procedure => ???)
+    val paramChunks: Map[Procedure, Chunk] = makeMap(procedures, procedure => Chunk(procedure.parameters :+ procedure.staticLink))
 
     /** The set of procedures whose frame needs to be allocated on the heap (instead of on the stack).
       * This includes:
@@ -657,7 +657,15 @@ object Transformations {
         */
       def computeStaticLink(callee: Procedure): Code = {
         val caller = currentProcedure
-        ???
+        val n = caller.depth - callee.depth + 1
+        if(callee.outer == None)
+        {
+          ADD(Reg.result, Reg.zero, Reg.zero)
+        }else{
+          block(ADD(Reg.result, c, Reg.zero))
+        }
+        
+        
       }
 
       /** Eliminate all `Call`s and `CallClosure`s from a tree of `Code` by translating them to simpler pieces
@@ -670,7 +678,36 @@ object Transformations {
         val caller = currentProcedure
         
 
-        def fun: PartialFunction[Code, Code] = ???
+        def fun: PartialFunction[Code, Code] = {
+          case call:Call =>{
+
+    
+            
+              val callee =  call.procedure 
+              val caller = currentProcedure
+              val params = call.procedure.parameters
+              val args = call.arguments
+              val temporaryVars = createTempVars(params)
+              val evaluatedArgs = temporaryVars.zip(args).map((tempVar, arg)=>{
+                block(arg,write(tempVar,  Reg.result))           
+              })
+              val copyEvaluatedArgs = params.zip(temporaryVars).map((param, tempVar)=>
+              {
+                block(read(Reg.scratch, tempVar),paramChunks(callee).store(Reg.result, param, Reg.scratch))
+              })
+          Scope(temporaryVars,  Block(evaluatedArgs++Seq(Stack.allocate(paramChunks(callee)))++copyEvaluatedArgs++Seq(
+            LIS(Reg.targetPC),
+            Use(callee.label),
+            JALR(Reg.targetPC)
+          )))
+          }
+          case callClosure: CallClosure=>{
+            
+            block()
+          } 
+          
+          
+        }
 
         transformCode(code, fun)
       }
