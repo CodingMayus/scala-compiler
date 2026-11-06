@@ -63,7 +63,26 @@ object Scanning {
       */
     
     def scanOne(input: List[Char], state: State, backtrack: (List[Char], State) ): (List[Char], State) =
-    ???
+    {
+
+      if(input.isEmpty){
+          return backtrack;
+      }
+      val curChar = input.head
+
+        if(dfa.transition.isDefinedAt(state,curChar)){
+          val newState = dfa.transition(state, curChar)
+          var newBackTrack = backtrack
+          if(dfa.accepting.contains(newState)){
+              newBackTrack = (input.drop(1), newState)
+          }
+          scanOne(input.drop(1),newState, newBackTrack)
+        }else {
+        backtrack;
+        }
+
+
+    }
 
     /** Given a `list` and `rest` such that `list.tail.tail....tail eq rest` for some sequence of zero or more
       * .tail operations, returns a list containing the elements that are in `list` but not in `rest` in the
@@ -91,7 +110,23 @@ object Scanning {
       * This method can also be implemented using a loop, and you are free to do so if you prefer.
       */
     
-    def recur(input: List[Char], accumulator: List[Token] = List.empty): List[Token] = ???
+    def recur(input: List[Char], accumulator: List[Token] = List.empty): List[Token] = {
+
+
+      if(input.isEmpty){
+        return accumulator
+      }
+
+      val (inputRemaining, kind) = scanOne(input, dfa.start, (input, dfa.start))
+
+      if(inputRemaining eq input){
+        // no progress
+        sys.error("Invalid Error: Invalid Token")
+      }
+      val lexeme = listDiff(input, inputRemaining).mkString
+
+      recur(inputRemaining, Token(kind, lexeme)::accumulator)
+    }
 
     recur(input.toList).reverse
   }

@@ -46,4 +46,16 @@ class A7aTests extends AnyFunSuite {
     assert(Scanning.recognize(A7.abcSubstring, "aaaaaaaaabc".toList) == true)
 
   }
+  test("scan") {
+    val prog = "def main(a: Int, b: Int): Int = { a + b }"
+    val tokens = Scanning.maximalMunchScan(Lacs.dfa, prog)
+    //    println(tokens)
+    codePrinter.pprintln(tokens)
+    val tokens2 = Lacs.scan(prog)
+    codePrinter.pprintln(tokens2)
+
+    assertThrows[RuntimeException](Lacs.scan("!"))
+
+  }
+
 }

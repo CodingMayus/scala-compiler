@@ -75,15 +75,35 @@ object Lacs {
       * that it recognize the set of valid Lacs token, without necessarily ending in a distinct state for
       * each kind of token.
       */
-
+  /** A DFA with alphabet {<,>,=,+,-,*,/,%, (, {,...} that recognizes valid tokens.
+   */
   val dfa = {
-    
+    def Letter(c: Char) = ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
+    def Digit(c: Char) = '0' <= c && c <= '9'
+
     DFA(
       alphabet = "<>=+-*/%(){},;:! \t\n\r".toSet ++ ('A' to 'Z') ++ ('a' to 'z') ++ ('0' to '9'),
-      states = ???,
-      start = ???,
-      accepting = ???,
-      transition = ???
+      states = Set("empty", "NUM", "ZERO", "ID","COMMENT","WHITESPACE", "SLASH", "EQUALS", "ANGLE", "NOT", "OP"),
+      start = "empty",
+      accepting = Set("NUM", "ZERO", "ID","WHITESPACE","COMMENT", "SLASH", "EQUALS", "ANGLE", "OP"),
+      transition = {
+        case ("empty", c) if Letter(c) => "ID"
+        case ("ID", c) if Letter(c) || Digit(c) => "ID"
+        case ("empty", '0') => "ZERO"
+        case ("empty", c) if Digit(c) => "NUM"
+        case ("NUM", c) if Digit(c) => "NUM"
+        case ("empty", ' ' | '\t' | '\n' | '\r') => "WHITESPACE"
+        case ("empty", '/') => "SLASH"
+        case ("SLASH", '/') => "COMMENT"
+        case ("COMMENT", c) if c != '\n' => "COMMENT"
+        case ("empty", '=') => "EQUALS"
+        case ("EQUALS", '=' | '>') => "OP"
+        case ("empty", '<' | '>') => "ANGLE"
+        case ("ANGLE", '=') => "OP"
+        case ("empty", '!') => "NOT"
+        case ("NOT", '=') => "OP"
+        case ("empty", c) if "+-*%(){},;:".contains(c) => "OP"
+      }
     )
   }
 
@@ -99,7 +119,69 @@ object Lacs {
     * {ID, DEF, VAR, INT, IF, ELSE, NUM}
     * {EQ, NE, LT, LE, GT, GE, BECOMES, ARROW}
    */
-  def scan(input: String): Seq[Token] = { ??? }
+  def scan(input: String): Seq[Token] = {
+
+    val set1 = Set("ID", "DEF", "VAR", "INT", "IF", "ELSE", "NUM")
+    val set2 = Set("EQ", "NE", "LT", "LE", "GT", "GE", "BECOMES", "ARROW")
+    val keyWords = Set("def", "var","Int","if", "else","(",")", "{","}","==","!=","<",">","<=",">=","+","-","*","/","%",",",";",":","=>")
+    val keyWordsMap = Map(
+      ("def", "DEF"),
+      ("var", "VAR"),
+      ("Int", "INT"),
+      ("if", "IF"),
+      ("else", "ELSE"),
+      ("(", "LPAREN"),
+      (")", "RPAREN"),
+      ("{", "LBRACE"),
+      ("}", "RBRACE"),
+      ("=", "BECOMES"),
+      ("==", "EQ"),
+      ("!=", "NE"),
+      ("<", "LT"),
+      (">", "GT"),
+      ("<=", "LE"),
+      (">=", "GE"),
+      ("+", "PLUS"),
+      ("-", "MINUS"),
+      ("*", "STAR"),
+      ("/", "SLASH"),
+      ("%", "PCT"),
+      (",", "COMMA"),
+      (";", "SEMI"),
+      (":", "COLON"),
+      ("=>", "ARROW"),
+      ("0", "NUM")
+    )
+
+var previousKind = "";
+    val changeTokenKindSeq = maximalMunchScan(dfa, input).map(token=>{
+        val newToken =
+          if(keyWordsMap.contains(token.lexeme)) {
+            Token(keyWordsMap(token.lexeme), token.lexeme)
+          }else{
+            token
+          }
+
+        if(set1.contains(previousKind) && set1.contains(newToken.kind)) {
+          sys.error("Two tokens of these types cannot be consecutively used.")
+        }
+      if(set2.contains(previousKind) && set2.contains(newToken.kind)) {
+        sys.error("Two tokens of these types cannot be consecutively used.")
+      }
+
+          previousKind = newToken.kind;
+          newToken
+        }
+
+    );
+    val tokenSeq = changeTokenKindSeq.filter(token =>{
+      token.kind != "COMMENT" && token.kind != "WHITESPACE"
+    })
+
+
+  (Token("BOF")+:tokenSeq)++Seq(Token("EOF"))
+
+  }
 
   /** The grammar for the Lacs programming language copied from the language specification. */
   val grammar = parseGrammar("""
